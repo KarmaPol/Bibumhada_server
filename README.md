@@ -1,2 +1,18 @@
 # Bibumhada_server
-비범하다 팀 서버 레포지토리 입니다. 
+
+### Introduction
+
+
+
+### Architecture
+
+
+### Contributing
+Feedback and suggestions are always welcome through issues or pull requests
+
+### Contributors 
+alphabetical order (Korean)
+- [hyunw9](https://github.com/hyunw9)
+- [Younghwan Kim](https://github.com/royroyee)
+
+### License
