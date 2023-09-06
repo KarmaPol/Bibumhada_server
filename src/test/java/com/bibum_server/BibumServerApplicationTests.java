@@ -1,4 +1,4 @@
-package bibumhada.bibum_server;
+package com.bibum_server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

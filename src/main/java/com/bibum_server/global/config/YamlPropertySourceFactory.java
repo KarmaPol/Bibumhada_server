@@ -1,4 +1,4 @@
-package bibumhada.bibum_server.global.config;
+package com.bibum_server.global.config;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
