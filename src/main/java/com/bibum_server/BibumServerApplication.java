@@ -1,6 +1,6 @@
-package bibumhada.bibum_server;
+package com.bibum_server;
 
-import bibumhada.bibum_server.global.config.YamlPropertySourceFactory;
+import com.bibum_server.global.config.YamlPropertySourceFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
