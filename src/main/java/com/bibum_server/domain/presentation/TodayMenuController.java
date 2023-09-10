@@ -12,6 +12,6 @@ public class TodayMenuController {
 
     @GetMapping(value = "/")
     public String printHelloWorld(){
-        return "Hello world!";
+        return "Hello world! ";
     }
 }
