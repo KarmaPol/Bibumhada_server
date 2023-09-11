@@ -22,14 +22,20 @@ public class Room {
 
     private String url;
 
+    private String x;
+
+    private String y;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private List<Restaurant> restaurantList;
 
     @Builder
-    public Room(String title, String url) {
+    public Room(String title, String url, String x, String y) {
         this.title = title;
         this.url = url;
+        this.x = x;
+        this.y = y;
     }
 }
 
