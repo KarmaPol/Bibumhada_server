@@ -1,12 +1,14 @@
 package com.bibum_server.domain.util;
 
 import com.bibum_server.domain.dto.request.LocationReq;
-import com.bibum_server.domain.dto.response.LocationRes;
-import org.apache.tomcat.util.json.JSONParser;
+import com.bibum_server.domain.dto.response.KakaoApiResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+
 @Component
 public class WebClientUtil {
     private static String apiKey;
@@ -30,7 +32,7 @@ public class WebClientUtil {
                 .bodyToMono(String.class);
     }
 
-    public Mono<String> locationSearch(LocationReq locationReq){
+    public Mono<List<KakaoApiResponse.RestaurantResponse>> getRestaurant(LocationReq locationReq){
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
@@ -45,7 +47,7 @@ public class WebClientUtil {
                         .build())
                 .header("Authorization","KakaoAK "+apiKey)
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(KakaoApiResponse.class)
+                .map(KakaoApiResponse::getDocuments);
     }
-    //TODO TEST 코드 작성 후 SERVICE에 붙일 것
 }
