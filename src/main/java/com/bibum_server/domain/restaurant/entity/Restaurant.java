@@ -1,5 +1,7 @@
 package com.bibum_server.domain.restaurant.entity;
 
+import com.bibum_server.domain.room.entity.Room;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,6 +27,11 @@ public class Restaurant {
 
     Long distance;
 
+    @JsonIgnore  // JSON 직렬화 시 해당 필드 제외
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="room_id")
+    private Room room;
+
 
     @Builder
     public Restaurant(String title, String category, Long count, String link, Long distance) {
@@ -34,4 +41,5 @@ public class Restaurant {
         this.link = link;
         this.distance = distance;
     }
+
 }
