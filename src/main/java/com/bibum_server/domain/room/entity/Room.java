@@ -1,7 +1,6 @@
 package com.bibum_server.domain.room.entity;
 
 import com.bibum_server.domain.restaurant.entity.Restaurant;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,9 +20,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String title;
-
     private String x;
 
     private String y;
@@ -37,8 +33,7 @@ public class Room {
     }
 
     @Builder
-    public Room(String title, String x, String y) {
-        this.title = title;
+    public Room(String x, String y) {
         this.x = x;
         this.y = y;
     }
