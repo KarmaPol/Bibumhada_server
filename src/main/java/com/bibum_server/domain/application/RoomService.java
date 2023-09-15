@@ -36,7 +36,7 @@ public class RoomService {
 
         List<KakaoApiResponse.RestaurantResponse> restaurantResponses = webClientUtil.getRestaurant(locationReq);
         List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
-                .title(restaurantResponse.getAddress_name())
+                .title(restaurantResponse.getPlace_name())
                 .category(restaurantResponse.getCategory_name().substring(6).trim())
                 .link(restaurantResponse.getPlace_url())
                 .count(0L)
