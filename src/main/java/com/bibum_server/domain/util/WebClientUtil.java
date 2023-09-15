@@ -32,7 +32,7 @@ public class WebClientUtil {
                 .bodyToMono(String.class);
     }
 
-    public Mono<List<KakaoApiResponse.RestaurantResponse>> getRestaurant(LocationReq locationReq){
+    public List<KakaoApiResponse.RestaurantResponse> getRestaurant(LocationReq locationReq){
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
@@ -48,6 +48,8 @@ public class WebClientUtil {
                 .header("Authorization","KakaoAK "+apiKey)
                 .retrieve()
                 .bodyToMono(KakaoApiResponse.class)
-                .map(KakaoApiResponse::getDocuments);
+                .block()
+                .getDocuments();
     }
+
 }
