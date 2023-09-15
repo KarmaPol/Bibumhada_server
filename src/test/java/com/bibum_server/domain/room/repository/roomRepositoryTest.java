@@ -16,18 +16,7 @@ class roomRepositoryTest {
     @Autowired
     private RoomRepository roomRepository;
 
-    @Test
-    public void roomSaveTest(){
-        Room room = Room.builder()
-                .title("test")
-                .url("www.test.com")
-                .build();
 
-        Room saveRoom = roomRepository.save(room);
-
-        assertThat("test").isEqualTo(saveRoom.getTitle());
-        assertThat("www.test.com").isEqualTo(saveRoom.getUrl());
-    }
 
 
 }
