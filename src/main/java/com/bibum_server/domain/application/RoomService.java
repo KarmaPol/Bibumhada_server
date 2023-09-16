@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 
@@ -57,5 +58,11 @@ public class RoomService {
                 .build();
 
 
+    }
+
+    @Transactional
+    public RoomDto voteRestaurant(Long restaurantId){
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(()-> new NoSuchElementException);
+        restaurant.
     }
 }
