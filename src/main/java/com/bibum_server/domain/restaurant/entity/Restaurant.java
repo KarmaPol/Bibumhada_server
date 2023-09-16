@@ -43,4 +43,8 @@ public class Restaurant {
         this.room = room;
     }
 
+    public void incrementCount(){
+        this.count+=1;
+    }
+
 }
