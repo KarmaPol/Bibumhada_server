@@ -59,6 +59,7 @@ public class RoomService {
 
 
     }
+
     @Transactional
     public RoomDto voteRestaurant(Long restaurantId){
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(()-> new NoSuchElementException);

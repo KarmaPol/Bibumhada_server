@@ -25,7 +25,11 @@ import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -76,6 +80,9 @@ class TodayMenuControllerTest extends AbstractRestDocsTests {
                 .restaurantDtoList(restaurantDtoList)
                 .build();
         given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
+
+
+
 
         this.mockMvc.perform(post("/create")  // 요청 URL 설정
                         .contentType(MediaType.APPLICATION_JSON)
