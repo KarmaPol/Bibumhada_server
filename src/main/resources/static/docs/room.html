@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.18">
-<title>RestDocsTestController</title>
+<title>방 생성 API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,26 +441,62 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_restdocstestcontroller">RestDocsTestController</h2>
+<h2 id="_방_생성_api">방 생성 API</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_restdocstestcontroller_http_request">HTTP request</h3>
+<h3 id="_방_생성_api_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /restDocsTest HTTP/1.1
-Host: localhost:8080</code></pre>
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /create HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 60
+Host: localhost:8080
+
+{
+  "longitude" : "127.190607",
+  "latitude" : "37.230840"
+}</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_restdocstestcontroller_http_response">HTTP response</h3>
+<h3 id="_방_생성_api_http_response">HTTP response</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Content-Type: text/plain;charset=UTF-8
-Content-Length: 6
+Content-Type: application/json
+Content-Length: 530
 
-rest!!</code></pre>
+{
+  "id" : 1,
+  "x" : "1",
+  "y" : "2",
+  "restaurantDtoList" : [ {
+    "id" : 0,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "roomId" : 1
+  }, {
+    "id" : 1,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "roomId" : 1
+  }, {
+    "id" : 2,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "roomId" : 1
+  } ]
+}</code></pre>
 </div>
 </div>
 </div>
@@ -470,7 +506,7 @@ rest!!</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-09-15 23:09:20 +0900
+Last updated 2023-09-16 13:56:29 +0900
 </div>
 </div>
 </body>
