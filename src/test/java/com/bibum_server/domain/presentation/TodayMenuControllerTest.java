@@ -1,60 +1,91 @@
 package com.bibum_server.domain.presentation;
 
+import com.bibum_server.domain.AbstractRestDocsTests;
 import com.bibum_server.domain.application.RoomService;
-import com.bibum_server.domain.util.WebClientUtil;
+import com.bibum_server.domain.dto.request.LocationReq;
+import com.bibum_server.domain.dto.response.RestaurantDto;
+import com.bibum_server.domain.dto.response.RoomDto;
+import com.bibum_server.domain.restaurant.entity.Restaurant;
+import com.bibum_server.domain.room.entity.Room;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.LongStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @WebMvcTest(TodayMenuController.class)
-class TodayMenuControllerTest {
+class TodayMenuControllerTest extends AbstractRestDocsTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private RoomService roomService;
-    @MockBean
-    private WebClientUtil webClientUtil;
 
-    /*@DisplayName("방을 생성한다.")
+    ObjectMapper mapper = new ObjectMapper();
+
+    @DisplayName("방을 생성한다.")
     @Test
     void createRoom() throws Exception {
-        Map<String,String> requestMap = new HashMap<>();
-        requestMap.put("longitude","127.190607");
-        requestMap.put("latitude","37.230840");
-        String content = new ObjectMapper().writeValueAsString(requestMap);
+        LocationReq location = new LocationReq();
+        location.setLatitude("37.230840");
+        location.setLongitude("127.190607");
+        String locationRequest = mapper.writeValueAsString(location);
 
-        MvcResult mvcResult = mockMvc.perform(
-                        post("/create") //url
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(content)
-                )
-                .andDo(print())
-                .andReturn();
-        Map<String,String> responseMap = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(),Map.class);
-        assertThat(responseMap.get("method")).isEqualTo("POST");
-        assertThat(responseMap.get("x")).isEqualTo("127.190607");
-        assertThat(responseMap.get("y")).isEqualTo("37.230840");
+        Room room = Room.builder()
+                .id(1L)
+                .x("1")
+                .y("2")
+                .build();
 
-    }*/
-}
+        List<Restaurant> restaurantList = LongStream.range(0L, 3L)
+                .mapToObj((i) -> Restaurant.builder()
+                        .room(room)
+                        .id(i)
+                        .distance(1L)
+                        .count(0L)
+                        .link("www.test.com")
+                        .category("testCat")
+                        .title("test")
+                        .build()
+                ).toList();
+        room.addRestaurant(restaurantList);
+
+        List<RestaurantDto> restaurantDtoList = restaurantList.stream().map(RestaurantDto::fromEntity).toList();
+        RoomDto mockResponse = RoomDto.builder()
+                .id(room.getId())
+                .x(room.getX())
+                .y(room.getY())
+                .restaurantDtoList(restaurantDtoList)
+                .build();
+        given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
+
+        //String jsonRequest = "{\"longitude\": \"1\", \"latitude\": \"2\"}";
+        this.mockMvc.perform(post("/create")  // 요청 URL 설정
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(locationRequest))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document());
+    }
+
+
+    }

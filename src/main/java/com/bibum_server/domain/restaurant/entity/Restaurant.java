@@ -33,7 +33,8 @@ public class Restaurant {
 
 
     @Builder
-    public Restaurant(String title, String category, Long count, String link, Long distance,Room room) {
+    public Restaurant(Long id,String title, String category, Long count, String link, Long distance,Room room) {
+        this.id = id;
         this.title = title;
         this.category = category;
         this.count = count;

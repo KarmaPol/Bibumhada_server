@@ -1,0 +1,3 @@
+== 방 생성 API
+
+operation::today-menu-controller-test/create-room[snippets="http-request,http-response"]

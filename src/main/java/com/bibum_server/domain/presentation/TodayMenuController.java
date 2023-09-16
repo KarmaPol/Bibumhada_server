@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TodayMenuController {
 
-    private final WebClientUtil webClientUtil;
     private final RoomService roomService;
 
     @PostMapping("/create")

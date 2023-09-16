@@ -33,7 +33,8 @@ public class Room {
     }
 
     @Builder
-    public Room(String x, String y) {
+    public Room(Long id, String x, String y) {
+        this.id = id;
         this.x = x;
         this.y = y;
     }

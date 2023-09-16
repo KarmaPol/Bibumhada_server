@@ -1,5 +1,6 @@
 package com.bibum_server.domain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public abstract class AbstractRestDocsTests {
 
     @Autowired
     protected RestDocumentationResultHandler restDocs;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @Autowired
     protected MockMvc mockMvc;
