@@ -1,12 +1,10 @@
 package com.bibum_server.domain.dto.response;
 
-import com.bibum_server.domain.restaurant.entity.Restaurant;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-public class KakaoApiResponse {
+public class KakaoApiRes {
     public List<RestaurantResponse> getDocuments() {
         return documents;
     }
