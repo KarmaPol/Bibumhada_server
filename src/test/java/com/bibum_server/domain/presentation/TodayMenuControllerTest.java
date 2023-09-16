@@ -3,8 +3,8 @@ package com.bibum_server.domain.presentation;
 import com.bibum_server.domain.AbstractRestDocsTests;
 import com.bibum_server.domain.application.RoomService;
 import com.bibum_server.domain.dto.request.LocationReq;
-import com.bibum_server.domain.dto.response.RestaurantDto;
-import com.bibum_server.domain.dto.response.RoomDto;
+import com.bibum_server.domain.dto.response.RestaurantRes;
+import com.bibum_server.domain.dto.response.RoomRes;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import com.bibum_server.domain.room.entity.Room;
 
@@ -28,7 +28,6 @@ import static org.mockito.BDDMockito.given;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,16 +71,14 @@ class TodayMenuControllerTest extends AbstractRestDocsTests {
                 ).toList();
         room.addRestaurant(restaurantList);
 
-        List<RestaurantDto> restaurantDtoList = restaurantList.stream().map(RestaurantDto::fromEntity).toList();
-        RoomDto mockResponse = RoomDto.builder()
+        List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
+        RoomRes mockResponse = RoomRes.builder()
                 .id(room.getId())
                 .x(room.getX())
                 .y(room.getY())
-                .restaurantDtoList(restaurantDtoList)
+                .restaurantResList(restaurantResList)
                 .build();
         given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
-
-
 
 
         this.mockMvc.perform(post("/create")  // 요청 URL 설정

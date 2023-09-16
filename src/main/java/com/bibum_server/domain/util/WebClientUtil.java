@@ -1,7 +1,7 @@
 package com.bibum_server.domain.util;
 
 import com.bibum_server.domain.dto.request.LocationReq;
-import com.bibum_server.domain.dto.response.KakaoApiResponse;
+import com.bibum_server.domain.dto.response.KakaoApiRes;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,7 +32,7 @@ public class WebClientUtil {
                 .bodyToMono(String.class);
     }
 
-    public List<KakaoApiResponse.RestaurantResponse> getRestaurant(LocationReq locationReq){
+    public List<KakaoApiRes.RestaurantResponse> getRestaurant(LocationReq locationReq){
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
@@ -47,7 +47,7 @@ public class WebClientUtil {
                         .build())
                 .header("Authorization","KakaoAK "+apiKey)
                 .retrieve()
-                .bodyToMono(KakaoApiResponse.class)
+                .bodyToMono(KakaoApiRes.class)
                 .block()
                 .getDocuments();
     }
