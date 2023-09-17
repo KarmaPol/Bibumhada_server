@@ -8,25 +8,13 @@ import java.util.List;
 
 @Getter
 public class MostPopularRestaurantRes {
-    Long restaurantId;
-    String restaurantTitle;
-    String category;
-    Long distance;
-    String url;
-    Long count;
-    String rank;
+    List<RestaurantRes> win;
 
     List<RestaurantRes> voteResultRes;
 
     @Builder
-    public MostPopularRestaurantRes(Long restaurantId,String restaurantTitle, String category, Long distance, String url, Long count, String rank, List<RestaurantRes> voteResult) {
-        this.restaurantId = restaurantId;
-        this.restaurantTitle = restaurantTitle;
-        this.category = category;
-        this.distance = distance;
-        this.url = url;
-        this.count = count;
-        this.rank = rank;
+    public MostPopularRestaurantRes(List<RestaurantRes>win, List<RestaurantRes> voteResult) {
+        this.win = win;
         this.voteResultRes= voteResult;
     }
 }

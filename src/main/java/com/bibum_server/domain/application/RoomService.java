@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -52,15 +53,12 @@ public class RoomService {
 
         restaurantRepository.saveAll(restaurants);
         List<RestaurantRes> restaurantRes = restaurants.stream().map(RestaurantRes::fromEntity).toList();
-
         return RoomRes.builder()
                 .id(room.getId())
                 .x(room.getX())
                 .y(room.getY())
                 .restaurantResList(restaurantRes)
                 .build();
-
-
     }
 
     @Transactional
@@ -68,30 +66,31 @@ public class RoomService {
         Restaurant restaurant = restaurantRepository.findByRoomIdAndId(roomId,restaurantId);
         restaurant.incrementCount();
         return RestaurantRes.fromEntity(restaurant);
-
     }
+
     public MostPopularRestaurantRes checkBestRestaurant(Long roomId){
         List<RestaurantRes> resultList = restaurantRepository.findAllByRoomId(roomId)
                 .stream().map(RestaurantRes::fromEntity).sorted(Comparator.comparing(RestaurantRes::getCount).reversed()).toList();
 
-        IntStream.range(0, resultList.size())
-                .forEach(i -> resultList.get(i).setRank((i + 1)+"등"));
+        long rank = 1L;
+        Long prevCount = null;
+        for (RestaurantRes currentRestaurant : resultList) {
+            if (prevCount != null && !currentRestaurant.getCount().equals(prevCount)) {
+                rank++;
+            }
+            currentRestaurant.setRank(rank);
+            prevCount = currentRestaurant.getCount();
+        }
 
-        RestaurantRes bestRestaurant = resultList.get(0);
+        Map<Boolean, List<RestaurantRes>> partitionedResult = resultList.stream()
+                .collect(Collectors.partitioningBy(r -> 1L==r.getRank()));
+        List<RestaurantRes> rankOneRestaurants = partitionedResult.get(true);
+        List<RestaurantRes> otherRestaurants = partitionedResult.get(false);
+
 
         return MostPopularRestaurantRes.builder()
-                .restaurantId(bestRestaurant.getId())
-                .restaurantTitle(bestRestaurant.getTitle())
-                .category(bestRestaurant.getCategory())
-                .count(bestRestaurant.getCount())
-                .url(bestRestaurant.getLink())
-                .distance(bestRestaurant.getDistance())
-                .rank(bestRestaurant.getRank())
-                .voteResult(resultList.stream()
-                        .sorted(Comparator.comparing(RestaurantRes::getCount).reversed())
-                        .limit(5).collect(Collectors.toList()))
+                .win(rankOneRestaurants)
+                .voteResult(otherRestaurants)
                 .build();
-
     }
-
 }

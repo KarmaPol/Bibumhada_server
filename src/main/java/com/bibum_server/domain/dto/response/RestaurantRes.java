@@ -24,11 +24,11 @@ public class RestaurantRes {
     Long distance;
 
     Long roomId;  // Room ID
-    String rank;
+    Long rank;
 
     @Builder
     public RestaurantRes(Long id, String title, String category, Long count,
-                         String link, Long distance, Long roomId, String rank) {
+                         String link, Long distance, Long roomId, Long rank) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -48,6 +48,7 @@ public class RestaurantRes {
                 .title(restaurant.getTitle())
                 .link(restaurant.getLink())
                 .roomId(restaurant.getRoom().getId())
+                .rank(0L)
                 .build();
 
     }
