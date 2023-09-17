@@ -23,18 +23,22 @@ public class RestaurantRes {
 
     Long distance;
 
+    String address;
+
     Long roomId;  // Room ID
+
     Long rank;
 
     @Builder
     public RestaurantRes(Long id, String title, String category, Long count,
-                         String link, Long distance, Long roomId, Long rank) {
+                         String link, Long distance, String address, Long roomId, Long rank) {
         this.id = id;
         this.title = title;
         this.category = category;
         this.count = count;
         this.link = link;
         this.distance = distance;
+        this.address = address;
         this.roomId = roomId;
         this.rank = rank;
     }
@@ -47,6 +51,7 @@ public class RestaurantRes {
                 .count(restaurant.getCount())
                 .title(restaurant.getTitle())
                 .link(restaurant.getLink())
+                .address(restaurant.getAddress())
                 .roomId(restaurant.getRoom().getId())
                 .rank(0L)
                 .build();

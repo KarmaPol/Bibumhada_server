@@ -18,8 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
+
 
 
 @Service
@@ -45,6 +44,7 @@ public class RoomService {
                 .category(restaurantResponse.getCategory_name().substring(6).trim())
                 .link(restaurantResponse.getPlace_url())
                 .count(0L)
+                .address(restaurantResponse.getAddress_name())
                 .distance(Long.valueOf(restaurantResponse.getDistance()))
                 .room(room)
                 .build()).collect(Collectors.toList());
