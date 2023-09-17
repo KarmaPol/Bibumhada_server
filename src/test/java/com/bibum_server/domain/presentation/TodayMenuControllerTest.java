@@ -44,7 +44,7 @@ class TodayMenuControllerTest extends AbstractRestDocsTests {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    @DisplayName("방을 생성한다.")
+    @DisplayName("Create Room.")
     @Test
     void createRoom() throws Exception {
         LocationReq location = new LocationReq();
@@ -81,7 +81,7 @@ class TodayMenuControllerTest extends AbstractRestDocsTests {
         given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
 
 
-        this.mockMvc.perform(post("/create")  // 요청 URL 설정
+        this.mockMvc.perform(post("/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(locationRequest))
                 .andExpect(status().isOk())

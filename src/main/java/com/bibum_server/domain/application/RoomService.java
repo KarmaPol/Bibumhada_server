@@ -64,7 +64,7 @@ public class RoomService {
     }
 
     @Transactional
-    public RestaurantRes voteRestaurant(Long roomId, Long restaurantId){
+    public R    estaurantRes voteRestaurant(Long roomId, Long restaurantId){
         Restaurant restaurant = restaurantRepository.findByRoomIdAndId(roomId,restaurantId);
         restaurant.incrementCount();
         return RestaurantRes.fromEntity(restaurant);
