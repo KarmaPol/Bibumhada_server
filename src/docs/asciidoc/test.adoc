@@ -1,2 +1,0 @@
-== RestDocsTestController
-operation::rest-docs-test/rest-docs-api[snippets="http-request,http-response"]

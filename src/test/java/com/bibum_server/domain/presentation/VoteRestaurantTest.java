@@ -8,7 +8,6 @@ import com.bibum_server.domain.dto.response.RestaurantRes;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import com.bibum_server.domain.restaurant.repository.RestaurantRepository;
 import com.bibum_server.domain.room.entity.Room;
-import com.bibum_server.domain.room.repository.RoomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,23 +15,13 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureRestDocs
@@ -63,6 +52,7 @@ public class VoteRestaurantTest extends AbstractRestDocsTests {
                 .distance(1L)
                 .rank(0L)
                 .roomId(1L)
+                .address("TestAddress")
                 .build();
         given(roomService.voteRestaurant(any(),any())).willReturn(restaurantRes);
 
@@ -82,15 +72,6 @@ public class VoteRestaurantTest extends AbstractRestDocsTests {
         Room room = TestUtil.CreateTestRoom();
         List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
         MostPopularRestaurantRes mostPopularRestaurantRes = TestUtil.CreateTestBestRestaurantList(room,restaurantList);
-        //MostPopularRestaurantRes response = MostPopularRestaurantRes.builder()
-        /*List<RestaurantRes> restaurantResList = IntStream.range(0, restaurantList.size())
-                .mapToObj(i -> {
-                    Restaurant restaurant = TestUtil.CreateTestRestaurantList(room).get(i);
-                    RestaurantRes res = RestaurantRes.fromEntity(restaurant);
-                    res.setRank((long) i + 1);  // rank 설정
-                    return res;
-                })
-                .toList();*/
         given(restaurantRepository.findAllByRoomId(roomId)).willReturn(restaurantList);
         given(roomService.checkBestRestaurant(roomId)).willReturn(mostPopularRestaurantRes);
 

@@ -1,6 +1,5 @@
 package com.bibum_server.domain.dto.response;
 
-import com.bibum_server.domain.restaurant.entity.Restaurant;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -31,6 +31,7 @@ public class TestUtil {
                         .count(0L)
                         .link("www.test.com")
                         .category("testCat")
+                        .address("testAddress")
                         .title("test")
                         .build()
                 ).toList();
