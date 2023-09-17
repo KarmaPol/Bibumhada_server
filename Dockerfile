@@ -5,6 +5,12 @@ WORKDIR /workspace
 # Copy all necessary files
 COPY . .
 
+# Install H2 Database
+RUN wget https://repo1.maven.org/maven2/com/h2database/h2/1.4.200/h2-1.4.200.jar
+
+# Start H2 Database in the background
+RUN java -cp h2-1.4.200.jar org.h2.tools.Server -web -webAllowOthers -tcp -tcpAllowOthers &
+
 # Build the project
 RUN gradle build
 
