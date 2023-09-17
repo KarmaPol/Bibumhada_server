@@ -1,6 +1,7 @@
 package com.bibum_server.domain.presentation;
 
 import com.bibum_server.domain.AbstractRestDocsTests;
+import com.bibum_server.domain.TestUtil;
 import com.bibum_server.domain.application.RoomService;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.dto.response.RestaurantRes;
@@ -34,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @WebMvcTest(TodayMenuController.class)
-class TodayMenuControllerTest extends AbstractRestDocsTests {
+class CreateRoomControllerTest extends AbstractRestDocsTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,23 +53,9 @@ class TodayMenuControllerTest extends AbstractRestDocsTests {
         location.setLongitude("127.190607");
         String locationRequest = mapper.writeValueAsString(location);
 
-        Room room = Room.builder()
-                .id(1L)
-                .x("1")
-                .y("2")
-                .build();
+        Room room = TestUtil.CreateTestRoom();
 
-        List<Restaurant> restaurantList = LongStream.range(0L, 3L)
-                .mapToObj((i) -> Restaurant.builder()
-                        .room(room)
-                        .id(i)
-                        .distance(1L)
-                        .count(0L)
-                        .link("www.test.com")
-                        .category("testCat")
-                        .title("test")
-                        .build()
-                ).toList();
+        List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
         room.addRestaurant(restaurantList);
 
         List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();

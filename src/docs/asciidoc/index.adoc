@@ -6,3 +6,5 @@
 :seclinks:
 
 include::room.adoc[]
+include::vote.adoc[]
+include::result.adoc[]

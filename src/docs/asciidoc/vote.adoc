@@ -1,0 +1,5 @@
+== 투표 API
+
+Path Variable 로 전송합니다.
+
+operation::vote-restaurant-test/vote-restaurant/[snippets="http-request,response-body"]

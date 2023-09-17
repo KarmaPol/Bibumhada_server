@@ -1,0 +1,4 @@
+== 결과 확인 API
+
+operation::vote-restaurant-test/check-best-restaurant[snippets="http-request,response-body"]
+
