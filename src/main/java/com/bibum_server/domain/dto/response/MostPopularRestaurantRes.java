@@ -7,12 +7,14 @@ import java.util.List;
 
 @Getter
 public class MostPopularRestaurantRes {
+    Long total;
     List<RestaurantRes> win;
 
     List<RestaurantRes> voteResultRes;
 
     @Builder
-    public MostPopularRestaurantRes(List<RestaurantRes>win, List<RestaurantRes> voteResult) {
+    public MostPopularRestaurantRes(Long total, List<RestaurantRes>win, List<RestaurantRes> voteResult) {
+        this.total = total;
         this.win = win;
         this.voteResultRes= voteResult;
     }
