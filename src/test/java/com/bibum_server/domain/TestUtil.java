@@ -20,6 +20,7 @@ public class TestUtil {
                 .id(1L)
                 .x("1")
                 .y("2")
+                .total(0L)
                 .build();
     }
     public static List<Restaurant> CreateTestRestaurantList(Room room){
@@ -31,6 +32,7 @@ public class TestUtil {
                         .count(0L)
                         .link("www.test.com")
                         .category("testCat")
+                        .address("testAddress")
                         .title("test")
                         .build()
                 ).toList();

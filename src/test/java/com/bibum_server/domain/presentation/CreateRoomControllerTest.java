@@ -19,16 +19,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
-import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,9 +47,11 @@ class CreateRoomControllerTest extends AbstractRestDocsTests {
     @DisplayName("Create Room.")
     @Test
     void createRoom() throws Exception {
-        LocationReq location = new LocationReq();
-        location.setLatitude("37.230840");
-        location.setLongitude("127.190607");
+        LocationReq location =  LocationReq.builder()
+                .latitude("37.230840")
+                .longitude("127.190607")
+                .build();
+
         String locationRequest = mapper.writeValueAsString(location);
 
         Room room = TestUtil.CreateTestRoom();
@@ -63,6 +64,7 @@ class CreateRoomControllerTest extends AbstractRestDocsTests {
                 .id(room.getId())
                 .x(room.getX())
                 .y(room.getY())
+                .total(room.getTotal())
                 .restaurantResList(restaurantResList)
                 .build();
         given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
@@ -71,6 +73,29 @@ class CreateRoomControllerTest extends AbstractRestDocsTests {
         this.mockMvc.perform(post("/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(locationRequest))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document());
+    }
+    @Test
+    void retry() throws Exception {
+        long roomId = 1L;
+        Room room = TestUtil.CreateTestRoom();
+
+        List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
+        room.addRestaurant(restaurantList);
+
+        List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
+        RoomRes mockResponse = RoomRes.builder()
+                .id(room.getId())
+                .x(room.getX())
+                .y(room.getY())
+                .total(room.getTotal())
+                .restaurantResList(restaurantResList)
+                .build();
+        given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
+
+
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/retry/{roomId}",roomId))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }

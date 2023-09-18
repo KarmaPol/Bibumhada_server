@@ -24,6 +24,8 @@ public class Room {
 
     private String y;
 
+    private Long total;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private List<Restaurant> restaurantList = new ArrayList<>();
@@ -33,10 +35,17 @@ public class Room {
     }
 
     @Builder
-    public Room(Long id, String x, String y) {
+    public Room(Long id, String x, String y, Long total) {
         this.id = id;
         this.x = x;
         this.y = y;
+        this.total = total;
+    }
+    public void incrementTotal(){
+        this.total+=1;
+    }
+    public void updateTotal(Long value){
+        this.total = value;
     }
 }
 
