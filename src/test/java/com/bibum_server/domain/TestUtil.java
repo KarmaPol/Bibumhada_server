@@ -20,6 +20,7 @@ public class TestUtil {
                 .id(1L)
                 .x("1")
                 .y("2")
+                .total(0L)
                 .build();
     }
     public static List<Restaurant> CreateTestRestaurantList(Room room){

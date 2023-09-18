@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @PropertySource(value = {"classpath:database/application-database.yml"}, factory = YamlPropertySourceFactory.class)
-@PropertySource(value = {"classpath:kakao/application-apikey.yml"}, factory = YamlPropertySourceFactory.class)
+@PropertySource(value = {"classpath:api/application-apikey.yml"}, factory = YamlPropertySourceFactory.class)
 
 public class BibumServerApplication {
 
