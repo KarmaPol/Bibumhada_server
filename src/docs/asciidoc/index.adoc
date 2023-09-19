@@ -1,10 +1,19 @@
-= Spring REST Docs Test
+= 오늘의 메뉴 API Docs
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
 :toclevels: 2
 :seclinks:
 
+NOTE: 해당 API 문서는 +
+요청 값 설명 +
+응답 값 설명 +
+HTTP 요청 예시 +
+HTTP Response 예시로 구성되어 있습니다.
+
+
 include::room.adoc[]
 include::vote.adoc[]
+include::resuggest.adoc[]
 include::result.adoc[]
+include::retry.adoc[]

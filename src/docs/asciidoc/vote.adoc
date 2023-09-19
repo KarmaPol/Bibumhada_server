@@ -1,5 +1,42 @@
 == 투표 API
+Path Variable 로 전송합니다. +
+해당 ID의 음식점 득표 수를 증가시킵니다. +
+====
+<요청>
+----
+/{roomId}/vote/{restaurantId}
+----
 
-Path Variable 로 전송합니다.
+응답
+[cols=2*]
+|===
+|id
+|음식점 고유 ID
+
+|title
+|음식점 이름
+
+|category
+|음식점 카테고리
+
+|count
+|음식점 득표수
+
+|link
+|음식점 URL
+
+|distance
+|현 위치로부터 거리 (m)
+
+|address
+|음식점 주소
+
+|roomId
+|음식점이 속한 방 고유 ID
+
+|rank
+|음식점 순위
+|===
 
 operation::vote-restaurant-test/vote-restaurant/[snippets="http-request,response-body"]
+====

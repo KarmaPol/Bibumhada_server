@@ -1,3 +1,76 @@
 == 방 생성 API
+방을 생성하고 음식점 리스트를 받아옵니다.
+====
+<요청>
+[cols=2*]
+|===
+|longitude
+|경도 값
 
-operation::create-room-controller-test/create-room[snippets="request-body,response-body"]
+|latitude
+|위도 값
+
+|===
+
+<응답>
+[cols=3*]
+|===
+|id
+|방 고유 ID
+|
+
+|x
+|경도 값
+|
+
+|y
+|위도 값
+|
+
+|total
+|총 득표 수
+|
+
+|
+|restaurantResList
+|음식점 리스트
+
+|
+|id
+|음식점 고유 ID
+
+|
+|title
+|음식점 이름
+
+|
+|category
+|음식점 유형
+
+|
+|count
+|득표 수
+
+|
+|link
+|음식점 URL
+
+|
+|distance
+|현 위치로 부터 거리(m)
+
+|
+|address
+|음식점 주소
+
+|
+|roomId
+|속한 방 ID
+
+|
+|rank
+|투표 순위
+|===
+
+operation::create-room-controller-test/create-room[snippets="http-request,response-body"]
+====

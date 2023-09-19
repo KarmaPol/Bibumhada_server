@@ -1,29 +1,34 @@
-== 결과 확인 API
+== 재추천 API
 Path variable로 전송합니다.
 
-투표 결과를 나타냅니다.
-
+현재 값과 다른 음식점들을 받아옵니다.
 ====
 <요청>
-
 ----
-"/{roomId}/result"
+"/resuggest/{roomId}"
 ----
-<응답>
 <응답>
 [cols=3*]
 |===
+|id
+|방 고유 ID
+|
+
+|x
+|경도 값
+|
+
+|y
+|위도 값
+|
+
 |total
-|전체 투표 인원
+|총 득표 수
 |
 
-|win(List)
-|우승 음식점 리스트
 |
-
-|voteResultRes(List)
-|우승 음식점 제외 리스트
-|
+|restaurantResList
+|음식점 리스트
 
 |
 |id
@@ -61,6 +66,5 @@ Path variable로 전송합니다.
 |rank
 |투표 순위
 |===
-operation::vote-restaurant-test/check-best-restaurant[snippets="http-request,response-body"]
+operation::room-controller-test/re-suggest[snippets="http-request,response-body"]
 ====
-
