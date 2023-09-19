@@ -29,6 +29,11 @@ jobs:
     - name: Create application-properties.yml
       run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-properties.yml
 
+    - name: Create necessary directories
+      run: |
+        mkdir -p src/main/resources/database
+        mkdir -p src/main/resources/api
+
     - name: Create application-database.yml
       run: echo "${{ secrets.APPLICATION_DATABASE }}" > src/main/resources/database/application-database.yml
 
