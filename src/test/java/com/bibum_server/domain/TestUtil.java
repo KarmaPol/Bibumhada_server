@@ -21,6 +21,7 @@ public class TestUtil {
                 .x("1")
                 .y("2")
                 .total(0L)
+                .page(1L)
                 .build();
     }
     public static List<Restaurant> CreateTestRestaurantList(Room room){
@@ -34,6 +35,20 @@ public class TestUtil {
                         .category("testCat")
                         .address("testAddress")
                         .title("test")
+                        .build()
+                ).toList();
+    }
+    public static List<Restaurant> CreatereSuggestedRestaurantList(Room room){
+        return LongStream.range(1L, 11L)
+                .mapToObj((i) -> Restaurant.builder()
+                        .room(room)
+                        .id(i)
+                        .distance(99L)
+                        .count(0L)
+                        .link("www.nextPageLink.com")
+                        .category("nextPageCategory")
+                        .address("nextPageAddress")
+                        .title("NextPageTitle")
                         .build()
                 ).toList();
     }
@@ -52,6 +67,7 @@ public class TestUtil {
         List<RestaurantRes> otherRestaurants = partitionedResult.get(false);
 
         return MostPopularRestaurantRes.builder()
+                .total(8L)
                 .win(rankOneRestaurants)
                 .voteResult(otherRestaurants)
                 .build();
