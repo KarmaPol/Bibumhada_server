@@ -1,6 +1,7 @@
 package com.bibum_server.domain.util;
 
 import com.bibum_server.domain.dto.request.LocationReq;
+import com.bibum_server.domain.dto.request.ReSuggestReq;
 import com.bibum_server.domain.dto.response.KakaoApiRes;
 import com.bibum_server.domain.dto.response.NaverApiItemRes;
 import com.bibum_server.domain.dto.response.NaverApiResponse;
@@ -58,6 +59,26 @@ public class WebClientUtil {
                         .queryParam("query","음식점")
                         .queryParam("radius",500)
                         .queryParam("page",1)
+                        .queryParam("size",10)
+                        .build())
+                .header("Authorization","KakaoAK "+ kakaoApiKey)
+                .retrieve()
+                .bodyToMono(KakaoApiRes.class)
+                .block()
+                .getDocuments();
+    }
+
+    public List<KakaoApiRes.RestaurantResponse> reSuggestRestaurant(ReSuggestReq reSuggestReq){
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .scheme("https")
+                        .host("dapi.kakao.com")
+                        .path("/v2/local/search/keyword.json")
+                        .queryParam("x",reSuggestReq.getLongitude())
+                        .queryParam("y",reSuggestReq.getLatitude())
+                        .queryParam("query","음식점")
+                        .queryParam("radius",500)
+                        .queryParam("page",reSuggestReq.getPage())
                         .queryParam("size",10)
                         .build())
                 .header("Authorization","KakaoAK "+ kakaoApiKey)

@@ -26,6 +26,8 @@ public class Room {
 
     private Long total;
 
+    private Long page;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private List<Restaurant> restaurantList = new ArrayList<>();
@@ -35,17 +37,21 @@ public class Room {
     }
 
     @Builder
-    public Room(Long id, String x, String y, Long total) {
+    public Room(Long id, String x, String y, Long total, Long page ) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.total = total;
+        this.page = page;
     }
     public void incrementTotal(){
         this.total+=1;
     }
     public void updateTotal(Long value){
         this.total = value;
+    }
+    public void getNextPage(){
+        this.page+=1;
     }
 }
 

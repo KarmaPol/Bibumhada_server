@@ -1,5 +1,6 @@
 package com.bibum_server.domain.application;
 
+import com.bibum_server.domain.dto.request.ReSuggestReq;
 import com.bibum_server.domain.dto.response.*;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -33,6 +31,7 @@ public class RoomService {
                 .x(locationReq.getLongitude())
                 .y(locationReq.getLatitude())
                 .total(0L)
+                .page(1L)
                 .build();
 
         roomRepository.save(room);
@@ -132,6 +131,40 @@ public class RoomService {
                 .x(room.getX())
                 .y(room.getY())
                 .total(0L)
+                .restaurantResList(restaurantRes)
+                .build();
+    }
+
+    @Transactional
+    public RoomRes ReSuggestRestaurant(Long roomId){
+        restaurantRepository.deleteAllByRoomId(roomId);
+        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        ReSuggestReq reSuggestReq = ReSuggestReq.builder()
+                .latitude(room.getY())
+                .longitude(room.getX())
+                .page(room.getPage() + 1L)
+                .build();
+        room.getNextPage();
+        roomRepository.save(room);
+        List<KakaoApiRes.RestaurantResponse> restaurantResponses = webClientUtil.reSuggestRestaurant(reSuggestReq);
+        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
+                .title(restaurantResponse.getPlace_name())
+                .category(restaurantResponse.getCategory_name().substring(6).trim())
+                .link(restaurantResponse.getPlace_url())
+                .count(0L)
+                .address(restaurantResponse.getAddress_name())
+                .distance(Long.valueOf(restaurantResponse.getDistance()))
+                .room(room)
+                .build()).collect(Collectors.toList());
+
+        room.addRestaurant(restaurants);
+        restaurantRepository.saveAll(restaurants);
+        List<RestaurantRes> restaurantRes = restaurants.stream().map(RestaurantRes::fromEntity).toList();
+        return RoomRes.builder()
+                .id(room.getId())
+                .x(room.getX())
+                .y(room.getY())
+                .total(room.getTotal())
                 .restaurantResList(restaurantRes)
                 .build();
     }

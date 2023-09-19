@@ -33,6 +33,11 @@ public class TodayMenuController {
     public RoomRes ReCreateRoom(@PathVariable("roomId") Long roomId){
         return roomService.retry(roomId);
     }
+
+    @PostMapping("/resuggest/{roomId}")
+    public RoomRes ReSuggestRestaurant(@PathVariable("roomId") Long roomId){
+        return roomService.ReSuggestRestaurant(roomId);
+    }
     @GetMapping("/info/{restaurantId}")
     public NaverApiItemRes convertKakaoUrl(@PathVariable("restaurantId") long restaurantId) throws UnsupportedEncodingException {
         return roomService.convertUrl(restaurantId);
