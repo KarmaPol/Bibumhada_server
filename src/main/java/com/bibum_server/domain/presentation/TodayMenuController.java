@@ -18,29 +18,41 @@ public class TodayMenuController {
     private final RoomService roomService;
 
     @PostMapping("/create")
-    public RoomRes CreateRoom(@RequestBody LocationReq locationReq){
+    public RoomRes CreateRoom(@RequestBody LocationReq locationReq) {
         return roomService.createRoom(locationReq);
     }
-    @PostMapping("/{roomId}/vote/{restaurantId}")
-    public RestaurantRes voteRestaurant(@PathVariable("roomId") Long roomId, @PathVariable("restaurantId") Long restaurantId){
-       return roomService.voteRestaurant(roomId,restaurantId);
+
+    @GetMapping("/{roomId}")
+    public RoomRes getRoomInfo(@PathVariable Long roomId){
+        return roomService.getRoomInfo(roomId);
     }
+
+    @PostMapping("/{roomId}/vote/{restaurantId}")
+    public RestaurantRes voteRestaurant(@PathVariable("roomId") Long roomId, @PathVariable("restaurantId") Long restaurantId) {
+        return roomService.voteRestaurant(roomId, restaurantId);
+    }
+
     @GetMapping("/{roomId}/result")
-    public MostPopularRestaurantRes checkBestRestaurant(@PathVariable("roomId") Long roomId){
+    public MostPopularRestaurantRes checkBestRestaurant(@PathVariable("roomId") Long roomId) {
         return roomService.checkBestRestaurant(roomId);
     }
+
     @PostMapping("/retry/{roomId}")
-    public RoomRes ReCreateRoom(@PathVariable("roomId") Long roomId){
+    public RoomRes ReCreateRoom(@PathVariable("roomId") Long roomId) {
         return roomService.retry(roomId);
     }
 
     @PostMapping("/resuggest/{roomId}")
-    public RoomRes ReSuggestRestaurant(@PathVariable("roomId") Long roomId){
-        return roomService.ReSuggestRestaurant(roomId);
+    public RoomRes ReSuggestRestaurants(@PathVariable("roomId") Long roomId) {
+        return roomService.ReSuggestRestaurants(roomId);
     }
+    @PostMapping("/{roomId}/resuggest/{restaurantId}")
+    public RestaurantRes ReSuggestOneRestaurant(@PathVariable("roomId")Long roomId, @PathVariable("restaurantId") Long restaurantId){
+        return roomService.reSuggestOneRestaurant(roomId, restaurantId);
+    }
+
     @GetMapping("/info/{restaurantId}")
     public NaverApiItemRes convertKakaoUrl(@PathVariable("restaurantId") long restaurantId) throws UnsupportedEncodingException {
         return roomService.convertUrl(restaurantId);
     }
-
 }

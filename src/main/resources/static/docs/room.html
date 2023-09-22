@@ -443,8 +443,114 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_방_생성_api">방 생성 API</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>방을 생성하고 음식점 리스트를 받아옵니다.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>&lt;요청&gt;</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">longitude</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">경도 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">latitude</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">위도 값</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>&lt;응답&gt;</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">방 고유 ID</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">경도 값</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">위도 값</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 득표 수</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">restaurantResList</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 고유 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">category</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 유형</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">득표 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">link</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현 위치로 부터 거리(m)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">address</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roomId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">속한 방 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rank</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">투표 순위</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect2">
-<h3 id="_방_생성_api_http_request">HTTP request</h3>
+<h3 id="_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /create HTTP/1.1
@@ -460,33 +566,24 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect2">
-<h3 id="_방_생성_api_http_response">HTTP response</h3>
+<h3 id="_response_body">Response body</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Content-Type: application/json
-Content-Length: 530
-
-{
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
   "id" : 1,
   "x" : "1",
   "y" : "2",
+  "total" : 0,
   "restaurantResList" : [ {
-    "id" : 0,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "roomId" : 1
-  }, {
     "id" : 1,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
     "link" : "www.test.com",
     "distance" : 1,
-    "roomId" : 1
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
   }, {
     "id" : 2,
     "title" : "test",
@@ -494,9 +591,93 @@ Content-Length: 530
     "count" : 0,
     "link" : "www.test.com",
     "distance" : 1,
-    "roomId" : 1
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 3,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 4,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 5,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 6,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 7,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 8,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 9,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 10,
+    "title" : "test",
+    "category" : "testCat",
+    "count" : 0,
+    "link" : "www.test.com",
+    "distance" : 1,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
   } ]
 }</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -506,7 +687,7 @@ Content-Length: 530
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-09-16 14:46:18 +0900
+Last updated 2023-09-20 01:29:05 +0900
 </div>
 </div>
 </body>
