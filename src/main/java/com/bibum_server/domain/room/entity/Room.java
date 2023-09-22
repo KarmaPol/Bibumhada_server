@@ -32,8 +32,12 @@ public class Room {
     @JoinColumn(name = "room_id")
     private List<Restaurant> restaurantList = new ArrayList<>();
 
-    public void addRestaurant(List<Restaurant> restaurants) {
+    public void addRestaurants(List<Restaurant> restaurants) {
         restaurants.stream().map(restaurant -> restaurantList.add(restaurant)).collect(Collectors.toList());
+    }
+
+    public void addRestaurant(Restaurant restaurant) {
+        restaurantList.add(restaurant);
     }
 
     @Builder
