@@ -447,8 +447,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_방_생성_api">방 생성 API</a></li>
+<li><a href="#_방_조회_api">방 조회 API</a></li>
 <li><a href="#_투표_api">투표 API</a></li>
 <li><a href="#_재추천_api">재추천 API</a></li>
+<li><a href="#_재추천_api_1_개">재추천 API (1 개)</a></li>
 <li><a href="#_결과_확인_api">결과 확인 API</a></li>
 <li><a href="#_방_재생성_api">방 재생성 API</a></li>
 </ul>
@@ -659,8 +661,133 @@ Host: localhost:8080
     "address" : "testAddress",
     "roomId" : 1,
     "rank" : 0
-  }, {
-    "id" : 6,
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_방_조회_api">방 조회 API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>생성된 방의 정보를 가져옵니다.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>&lt;요청&gt;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"http:localhost:8080/{roomId} -GET "</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;응답&gt;</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">방 고유 ID</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">경도 값</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">위도 값</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 득표 수</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">restaurantResList</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 고유 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">category</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 유형</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">득표 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">link</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현 위치로 부터 거리(m)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">address</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roomId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">속한 방 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rank</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">투표 순위</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_http_request">HTTP request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_body">Response body</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "id" : 1,
+  "x" : "1",
+  "y" : "2",
+  "total" : 0,
+  "restaurantResList" : [ {
+    "id" : 1,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
@@ -670,7 +797,7 @@ Host: localhost:8080
     "roomId" : 1,
     "rank" : 0
   }, {
-    "id" : 7,
+    "id" : 2,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
@@ -680,7 +807,7 @@ Host: localhost:8080
     "roomId" : 1,
     "rank" : 0
   }, {
-    "id" : 8,
+    "id" : 3,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
@@ -690,7 +817,7 @@ Host: localhost:8080
     "roomId" : 1,
     "rank" : 0
   }, {
-    "id" : 9,
+    "id" : 4,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
@@ -700,7 +827,7 @@ Host: localhost:8080
     "roomId" : 1,
     "rank" : 0
   }, {
-    "id" : 10,
+    "id" : 5,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
@@ -722,7 +849,7 @@ Host: localhost:8080
 <h2 id="_투표_api">투표 API</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Path Variable 로 전송합니다.<br>
+<p>Path Variable 으로 방 ID를, Json 형식으로 투표하고자 하는 음식점들을 전달합니다.<br>
 해당 ID의 음식점 득표 수를 증가시킵니다.<br></p>
 </div>
 <div class="exampleblock">
@@ -732,7 +859,7 @@ Host: localhost:8080
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>/{roomId}/vote/{restaurantId}</pre>
+<pre>/{roomId}/vote</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -786,9 +913,14 @@ Host: localhost:8080
 <h3 id="_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /1/vote/2 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /1/vote HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 35
 Host: localhost:8080
-Content-Type: application/x-www-form-urlencoded</code></pre>
+
+{
+  "restaurantIdList" : [ 1, 2 ]
+}</code></pre>
 </div>
 </div>
 </div>
@@ -797,15 +929,27 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
-  "id" : 1,
-  "title" : "Test Food",
-  "category" : "TestCategory",
-  "count" : 1,
-  "link" : "www.test.com",
-  "distance" : 1,
-  "address" : "TestAddress",
-  "roomId" : 1,
-  "rank" : 0
+  "restaurantVotes" : [ {
+    "id" : 1,
+    "title" : "testRestaurant",
+    "category" : "testCategory",
+    "count" : 1,
+    "link" : "www.test.com",
+    "distance" : 999,
+    "address" : "testAddress",
+    "roomId" : 1,
+    "rank" : 0
+  }, {
+    "id" : 2,
+    "title" : "testRestaurant",
+    "category" : "testCategory",
+    "count" : 1,
+    "link" : "www.test.com",
+    "distance" : 999,
+    "address" : "testAddress",
+    "roomId" : 2,
+    "rank" : 0
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -984,57 +1128,99 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
     "address" : "nextPageAddress",
     "roomId" : 1,
     "rank" : 0
-  }, {
-    "id" : 6,
-    "title" : "NextPageTitle",
-    "category" : "nextPageCategory",
-    "count" : 0,
-    "link" : "www.nextPageLink.com",
-    "distance" : 99,
-    "address" : "nextPageAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 7,
-    "title" : "NextPageTitle",
-    "category" : "nextPageCategory",
-    "count" : 0,
-    "link" : "www.nextPageLink.com",
-    "distance" : 99,
-    "address" : "nextPageAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 8,
-    "title" : "NextPageTitle",
-    "category" : "nextPageCategory",
-    "count" : 0,
-    "link" : "www.nextPageLink.com",
-    "distance" : 99,
-    "address" : "nextPageAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 9,
-    "title" : "NextPageTitle",
-    "category" : "nextPageCategory",
-    "count" : 0,
-    "link" : "www.nextPageLink.com",
-    "distance" : 99,
-    "address" : "nextPageAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 10,
-    "title" : "NextPageTitle",
-    "category" : "nextPageCategory",
-    "count" : 0,
-    "link" : "www.nextPageLink.com",
-    "distance" : 99,
-    "address" : "nextPageAddress",
-    "roomId" : 1,
-    "rank" : 0
   } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_재추천_api_1_개">재추천 API (1 개)</h2>
+<div class="sectionbody">
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>&lt;요청&gt;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://localhost:8080/{roomId}/resuggest/{restaurantid}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;응답&gt;</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">방 고유 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">category</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">카테고리</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">투표 받은 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">link</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 링크</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 거리(m)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">address</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roomId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점이 속한 방</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rank</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">음식점 순위</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_http_request">HTTP request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /1/resuggest/1 HTTP/1.1
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_body">Response body</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "id" : 1,
+  "title" : "ReSuggestedRestaurant",
+  "category" : "TestCategory",
+  "count" : 0,
+  "link" : "www.ResuggestURL.com",
+  "distance" : 123,
+  "address" : "testAddress",
+  "roomId" : 1,
+  "rank" : 0
 }</code></pre>
 </div>
 </div>
@@ -1201,56 +1387,6 @@ Host: localhost:8080</code></pre>
     "address" : "testAddress",
     "roomId" : 1,
     "rank" : 5
-  }, {
-    "id" : 6,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 6
-  }, {
-    "id" : 7,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 7
-  }, {
-    "id" : 8,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 8
-  }, {
-    "id" : 9,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 9
-  }, {
-    "id" : 10,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 10
   } ]
 }</code></pre>
 </div>
@@ -1422,56 +1558,6 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
     "rank" : 0
   }, {
     "id" : 5,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 6,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 7,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 8,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 9,
-    "title" : "test",
-    "category" : "testCat",
-    "count" : 0,
-    "link" : "www.test.com",
-    "distance" : 1,
-    "address" : "testAddress",
-    "roomId" : 1,
-    "rank" : 0
-  }, {
-    "id" : 10,
     "title" : "test",
     "category" : "testCat",
     "count" : 0,
