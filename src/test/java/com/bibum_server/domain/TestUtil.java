@@ -15,6 +15,10 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public class TestUtil {
+
+    public static final long LEAST_ID = 1L;
+    public static final long MAX_ID = 6L;
+
     public static Room CreateTestRoom() {
         return Room.builder()
                 .id(1L)
@@ -25,7 +29,7 @@ public class TestUtil {
                 .build();
     }
     public static List<Restaurant> CreateTestRestaurantList(Room room){
-        return LongStream.range(1L, 11L)
+        return LongStream.range(1L, 6L)
                 .mapToObj((i) -> Restaurant.builder()
                         .room(room)
                         .id(i)
@@ -39,7 +43,7 @@ public class TestUtil {
                 ).toList();
     }
     public static List<Restaurant> CreatereSuggestedRestaurantList(Room room){
-        return LongStream.range(1L, 11L)
+        return LongStream.range(LEAST_ID, MAX_ID)
                 .mapToObj((i) -> Restaurant.builder()
                         .room(room)
                         .id(i)

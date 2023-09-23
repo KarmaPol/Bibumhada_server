@@ -3,11 +3,14 @@ package com.bibum_server.domain.presentation;
 import com.bibum_server.domain.AbstractRestDocsTests;
 import com.bibum_server.domain.TestUtil;
 import com.bibum_server.domain.application.RoomService;
+import com.bibum_server.domain.dto.request.VoteReq;
 import com.bibum_server.domain.dto.response.MostPopularRestaurantRes;
 import com.bibum_server.domain.dto.response.RestaurantRes;
+import com.bibum_server.domain.dto.response.VoteRes;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import com.bibum_server.domain.restaurant.repository.RestaurantRepository;
 import com.bibum_server.domain.room.entity.Room;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,14 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -37,28 +44,43 @@ public class VoteRestaurantTest extends AbstractRestDocsTests {
     @MockBean
     private RestaurantRepository restaurantRepository;
 
+    ObjectMapper mapper = new ObjectMapper();
+
+
     @DisplayName("Vote Restaurant")
     @Test
     void voteRestaurant() throws Exception{
         //given
         long roomId = 1L;
-        long restaurantId = 2L;
-        RestaurantRes restaurantRes= RestaurantRes.builder()
-                .id(1L)
-                .title("Test Food")
-                .category("TestCategory")
-                .link("www.test.com")
-                .count(1L)
-                .distance(1L)
-                .rank(0L)
-                .roomId(1L)
-                .address("TestAddress")
+        List<Long> restaurantId = new ArrayList<>();
+        restaurantId.add(1L);
+        restaurantId.add(2L);
+        VoteReq voteReq = VoteReq.builder()
+                .restaurantIdList(restaurantId)
                 .build();
-        given(roomService.voteRestaurant(any(),any())).willReturn(restaurantRes);
+        String VoteRequest = mapper.writeValueAsString(voteReq);
+
+        List<VoteRes.RestaurantVote> voteResList = LongStream.range(1L,3L).mapToObj(i->{
+            return VoteRes.RestaurantVote.builder()
+                    .roomId(i)
+                    .id(i)
+                    .rank(0L)
+                    .address("testAddress")
+                    .distance(999L)
+                    .link("www.test.com")
+                    .count(1L)
+                    .category("testCategory")
+                    .title("testRestaurant")
+                    .build();
+        }).toList();
+        VoteRes voteRes = VoteRes.builder().restaurantVotes(voteResList).build();
+
+        given(roomService.voteRestaurant(any(),any())).willReturn(voteRes);
 
 
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/{roomId}/vote/{restaurantId}",
-                roomId,restaurantId))
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/{roomId}/vote",
+                roomId).contentType(MediaType.APPLICATION_JSON)
+                        .content(VoteRequest))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
 
@@ -74,9 +96,6 @@ public class VoteRestaurantTest extends AbstractRestDocsTests {
         MostPopularRestaurantRes mostPopularRestaurantRes = TestUtil.CreateTestBestRestaurantList(room,restaurantList);
         given(restaurantRepository.findAllByRoomId(roomId)).willReturn(restaurantList);
         given(roomService.checkBestRestaurant(roomId)).willReturn(mostPopularRestaurantRes);
-
-
-
         //then
 
         this.mockMvc.perform(RestDocumentationRequestBuilders.get("/{roomId}/result",roomId))
