@@ -36,13 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TodayMenuController.class)
 class RoomControllerTest extends AbstractRestDocsTests {
 
+    ObjectMapper mapper = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private RoomService roomService;
-
-    ObjectMapper mapper = new ObjectMapper();
 
     @DisplayName("Create Room.")
     @Test
@@ -57,7 +55,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
         Room room = TestUtil.CreateTestRoom();
 
         List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
-        room.addRestaurant(restaurantList);
+        room.addRestaurants(restaurantList);
 
         List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
         RoomRes mockResponse = RoomRes.builder()
@@ -83,7 +81,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
         Room room = TestUtil.CreateTestRoom();
         List<Restaurant> restaurantList = TestUtil.CreatereSuggestedRestaurantList(room);
         List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
-        given(roomService.ReSuggestRestaurant(roomId)).willReturn(RoomRes.builder().id(room.getId())
+        given(roomService.ReSuggestRestaurants(roomId)).willReturn(RoomRes.builder().id(room.getId())
                 .total(room.getTotal())
                 .x(room.getX())
                 .y(room.getY())
@@ -94,13 +92,14 @@ class RoomControllerTest extends AbstractRestDocsTests {
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }
+
     @Test
     void retry() throws Exception {
         long roomId = 1L;
         Room room = TestUtil.CreateTestRoom();
 
         List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
-        room.addRestaurant(restaurantList);
+        room.addRestaurants(restaurantList);
 
         List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
         RoomRes mockResponse = RoomRes.builder()
@@ -118,6 +117,45 @@ class RoomControllerTest extends AbstractRestDocsTests {
                 .andDo(restDocs.document());
     }
 
+    @Test
+    void getRoomInfo() throws Exception {
+        long roomId = 1L;
+        Room room = TestUtil.CreateTestRoom();
+        List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
+        List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
+        RoomRes mockResponse = RoomRes.builder()
+                .id(room.getId())
+                .x(room.getX())
+                .y(room.getY())
+                .total(room.getTotal())
+                .restaurantResList(restaurantResList)
+                .build();
+        given(roomService.getRoomInfo(any(Long.class))).willReturn(mockResponse);
 
 
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/{roomId}", roomId))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document());
+    }
+    @Test
+    void ReSuggestOneRestaurant() throws Exception{
+        long roomId = 1L;
+        long restaurantId = 1L;
+        Room room = TestUtil.CreateTestRoom();
+        Restaurant restaurant = Restaurant.builder()
+                .room(room)
+                .id(1L)
+                .title("ReSuggestedRestaurant")
+                .link("www.ResuggestURL.com")
+                .distance(123L)
+                .count(0L)
+                .category("TestCategory")
+                .address("testAddress")
+                .build();
+        RestaurantRes response = RestaurantRes.fromEntity(restaurant);
+        given(roomService.reSuggestOneRestaurant(any(Long.class),any(Long.class))).willReturn(response);
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/{roomId}/resuggest/{restaurantId}",roomId,restaurantId))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document());
+    }
 }

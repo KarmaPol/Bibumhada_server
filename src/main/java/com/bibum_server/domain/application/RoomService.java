@@ -1,6 +1,7 @@
 package com.bibum_server.domain.application;
 
 import com.bibum_server.domain.dto.request.ReSuggestReq;
+import com.bibum_server.domain.dto.request.VoteReq;
 import com.bibum_server.domain.dto.response.*;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
@@ -13,10 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
         List<RestaurantRes> restaurantList = restaurantRepository.findAllByRoomId(roomId)
                 .stream()
-                .map(restaurant -> RestaurantRes.fromEntity(restaurant))
+                .map(RestaurantRes::fromEntity)
                 .toList();
         return RoomRes.builder()
                 .id(room.getId())
@@ -77,12 +76,32 @@ public class RoomService {
     }
 
     @Transactional
-    public RestaurantRes voteRestaurant(Long roomId, Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findByRoomIdAndId(roomId, restaurantId);
-        Optional<Room> room = roomRepository.findById(roomId);
-        room.ifPresent(Room::incrementTotal);
-        restaurant.incrementCount();
-        return RestaurantRes.fromEntity(restaurant);
+    public VoteRes voteRestaurant(Long roomId,VoteReq voteReq) {
+        List<Long> restaurantReqList = voteReq.getRestaurantIdList();
+        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        List<Restaurant> restaurantList = restaurantRepository.findByRoomIdAndIdIn(roomId, restaurantReqList);
+
+        restaurantList.forEach(Restaurant::incrementCount);
+        room.incrementTotal();
+
+        List<VoteRes.RestaurantVote> votes =
+                restaurantList.stream()
+                        .map(r -> {
+                            return VoteRes.RestaurantVote.builder()
+                                    .id(r.getId())
+                                    .title(r.getTitle())
+                                    .category(r.getCategory())
+                                    .count(r.getCount())
+                                    .link(r.getLink())
+                                    .distance(r.getDistance())
+                                    .address(r.getAddress())
+                                    .rank(0L)
+                                    .roomId(room.getId())
+                                    .build();
+                        })
+                        .toList();
+
+        return new VoteRes(votes);
     }
 
     public MostPopularRestaurantRes checkBestRestaurant(Long roomId) {
@@ -193,7 +212,7 @@ public class RoomService {
                 .build();
         Restaurant deleteRestaurant = restaurantRepository.findByRoomIdAndId(roomId, restaurantId);
         restaurantRepository.delete(deleteRestaurant);
-        List<KakaoApiRes.RestaurantResponse> receivedRestaurantResponse = webClientUtil.reSuggestRestaurant(reSuggestReq);
+        List<KakaoApiRes.RestaurantResponse> receivedRestaurantResponse = webClientUtil.reSuggestOneRestaurant(reSuggestReq);
 
         Restaurant restaurant = receivedRestaurantResponse.stream()
                 .map(restaurantResponse -> Restaurant.builder()
