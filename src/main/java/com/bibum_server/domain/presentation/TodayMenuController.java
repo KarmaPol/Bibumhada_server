@@ -1,11 +1,13 @@
 package com.bibum_server.domain.presentation;
 
 import com.bibum_server.domain.application.RoomService;
+import com.bibum_server.domain.dto.request.VoteReq;
 import com.bibum_server.domain.dto.response.NaverApiItemRes;
 import com.bibum_server.domain.dto.response.RestaurantRes;
 import com.bibum_server.domain.dto.response.RoomRes;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.dto.response.MostPopularRestaurantRes;
+import com.bibum_server.domain.dto.response.VoteRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,9 @@ public class TodayMenuController {
         return roomService.getRoomInfo(roomId);
     }
 
-    @PostMapping("/{roomId}/vote/{restaurantId}")
-    public RestaurantRes voteRestaurant(@PathVariable("roomId") Long roomId, @PathVariable("restaurantId") Long restaurantId) {
-        return roomService.voteRestaurant(roomId, restaurantId);
+    @PostMapping(value = "/{roomId}/vote",produces = "application/json")
+    public VoteRes voteRestaurant(@PathVariable Long roomId, @RequestBody VoteReq voteReq) {
+        return roomService.voteRestaurant(roomId, voteReq);
     }
 
     @GetMapping("/{roomId}/result")
