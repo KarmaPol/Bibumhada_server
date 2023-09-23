@@ -13,7 +13,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:8080", "http://43.201.167.198:8080",
                         "http://localhost:3000",
                         "https://localhost:3000",
-                        "https://todays-menu-front.vercel.app"
+                        "https://todays-menu-front.vercel.app",
+                        "https://dev-todays-menu-front.vercel.app"
+
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
         ;
