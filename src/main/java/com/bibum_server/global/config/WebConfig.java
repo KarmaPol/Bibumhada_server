@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:8080", 
-                        "http://todays-menu.kr,
+                        "http://todays-menu.kr",
                         "http://localhost:3000",
                         "https://localhost:3000",
                         "https://todays-menu-front.vercel.app",
