@@ -14,6 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://todays-menu.kr",
                         "http://localhost:3000",
                         "https://localhost:3000",
+                        "http://43.201.167.198:8080",
+                        "http://43.201.167.198",
                         "https://todays-menu-front.vercel.app",
                         "https://dev-todays-menu-front.vercel.app"
 
