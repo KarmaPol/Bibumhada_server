@@ -19,41 +19,41 @@ public class TodayMenuController {
 
     private final RoomService roomService;
 
-    @PostMapping("/create")
+    @PostMapping("/api/v1/create")
     public RoomRes CreateRoom(@RequestBody LocationReq locationReq) {
         return roomService.createRoom(locationReq);
     }
 
-    @GetMapping("/{roomId}")
+    @GetMapping("/api/v1/{roomId}")
     public RoomRes getRoomInfo(@PathVariable Long roomId){
         return roomService.getRoomInfo(roomId);
     }
 
-    @PostMapping(value = "/{roomId}/vote",produces = "application/json")
+    @PostMapping(value = "/api/v1/{roomId}/vote",produces = "application/json")
     public VoteRes voteRestaurant(@PathVariable Long roomId, @RequestBody VoteReq voteReq) {
         return roomService.voteRestaurant(roomId, voteReq);
     }
 
-    @GetMapping("/{roomId}/result")
+    @GetMapping("/api/v1/{roomId}/result")
     public MostPopularRestaurantRes checkBestRestaurant(@PathVariable("roomId") Long roomId) {
         return roomService.checkBestRestaurant(roomId);
     }
 
-    @PostMapping("/retry/{roomId}")
+    @PostMapping("/api/v1/retry/{roomId}")
     public RoomRes ReCreateRoom(@PathVariable("roomId") Long roomId) {
         return roomService.retry(roomId);
     }
 
-    @PostMapping("/resuggest/{roomId}")
+    @PostMapping("/api/v1/resuggest/{roomId}")
     public RoomRes ReSuggestRestaurants(@PathVariable("roomId") Long roomId) {
         return roomService.ReSuggestRestaurants(roomId);
     }
-    @PostMapping("/{roomId}/resuggest/{restaurantId}")
+    @PostMapping("/api/v1/{roomId}/resuggest/{restaurantId}")
     public RestaurantRes ReSuggestOneRestaurant(@PathVariable("roomId")Long roomId, @PathVariable("restaurantId") Long restaurantId){
         return roomService.reSuggestOneRestaurant(roomId, restaurantId);
     }
 
-    @GetMapping("/info/{restaurantId}")
+    @GetMapping("/api/v1/info/{restaurantId}")
     public NaverApiItemRes convertKakaoUrl(@PathVariable("restaurantId") long restaurantId) throws UnsupportedEncodingException {
         return roomService.convertUrl(restaurantId);
     }
