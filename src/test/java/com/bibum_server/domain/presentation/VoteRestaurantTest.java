@@ -78,7 +78,7 @@ public class VoteRestaurantTest extends AbstractRestDocsTests {
         given(roomService.voteRestaurant(any(),any())).willReturn(voteRes);
 
 
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/{roomId}/vote",
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/{roomId}/vote",
                 roomId).contentType(MediaType.APPLICATION_JSON)
                         .content(VoteRequest))
                 .andExpect(status().isOk())
@@ -98,7 +98,7 @@ public class VoteRestaurantTest extends AbstractRestDocsTests {
         given(roomService.checkBestRestaurant(roomId)).willReturn(mostPopularRestaurantRes);
         //then
 
-        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/{roomId}/result",roomId))
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/{roomId}/result",roomId))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }

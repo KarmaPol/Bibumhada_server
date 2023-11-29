@@ -68,7 +68,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
         given(roomService.createRoom(any(LocationReq.class))).willReturn(mockResponse);
 
 
-        this.mockMvc.perform(post("/create")
+        this.mockMvc.perform(post("/api/v1/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(locationRequest))
                 .andExpect(status().isOk())
@@ -88,7 +88,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
                 .restaurantResList(restaurantResList)
                 .build());
 
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/resuggest/{roomId}", roomId))
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/resuggest/{roomId}", roomId))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }
@@ -112,7 +112,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
         given(roomService.retry(any(Long.class))).willReturn(mockResponse);
 
 
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/retry/{roomId}", roomId))
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/retry/{roomId}", roomId))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }
@@ -133,7 +133,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
         given(roomService.getRoomInfo(any(Long.class))).willReturn(mockResponse);
 
 
-        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/{roomId}", roomId))
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/{roomId}", roomId))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }
@@ -154,7 +154,7 @@ class RoomControllerTest extends AbstractRestDocsTests {
                 .build();
         RestaurantRes response = RestaurantRes.fromEntity(restaurant);
         given(roomService.reSuggestOneRestaurant(any(Long.class),any(Long.class))).willReturn(response);
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/{roomId}/resuggest/{restaurantId}",roomId,restaurantId))
+        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/{roomId}/resuggest/{restaurantId}",roomId,restaurantId))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }
