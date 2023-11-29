@@ -58,7 +58,7 @@ public class RoomService {
                 .link(restaurantResponse.getPlace_url())
                 .count(0L)
                 .address(restaurantResponse.getAddress_name())
-                .distance(Long.valueOf(restaurantResponse.getDistance()))
+                .distance(Long.valueOf(restaurantResponse.getDistance().equals("") ? "0": restaurantResponse.getDistance()))
                 .room(room)
                 .build()).collect(Collectors.toList());
 

@@ -69,7 +69,7 @@ public class WebClientUtil {
                 .getDocuments();
         Collections.shuffle(restaurants);
 
-        return restaurants.subList(0, 5);
+        return restaurants;
     }
 
     public List<KakaoApiRes.RestaurantResponse> reSuggestRestaurant(ReSuggestReq reSuggestReq) {
