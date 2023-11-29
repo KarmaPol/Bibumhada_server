@@ -28,10 +28,12 @@ public class Restaurant {
 
     String address;
 
+    @Builder.Default
+    Boolean isRetried = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="room_id")
     private Room room;
-
 
     @Builder
     public Restaurant(Long id,String title, String category, Long count, String link, Long distance,String address,Room room) {
