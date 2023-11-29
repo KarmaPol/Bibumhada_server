@@ -25,13 +25,15 @@ public class RestaurantRes {
 
     String address;
 
+    Boolean isRetried;
+
     Long roomId;  // Room ID
 
     Long rank;
 
     @Builder
     public RestaurantRes(Long id, String title, String category, Long count,
-                         String link, Long distance, String address, Long roomId, Long rank) {
+                         String link, Long distance, String address, Boolean isRetried, Long roomId, Long rank) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -39,6 +41,7 @@ public class RestaurantRes {
         this.link = link;
         this.distance = distance;
         this.address = address;
+        this.isRetried = isRetried;
         this.roomId = roomId;
         this.rank = rank;
     }
@@ -52,6 +55,7 @@ public class RestaurantRes {
                 .title(restaurant.getTitle())
                 .link(restaurant.getLink())
                 .address(restaurant.getAddress())
+                .isRetried(restaurant.getIsRetried())
                 .roomId(restaurant.getRoom().getId())
                 .rank(0L)
                 .build();
