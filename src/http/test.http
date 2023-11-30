@@ -10,3 +10,6 @@ Content-Type: application/json
   "longitude" : "37.230840",
   "latitude" : "127.190607"
 }
+
+###
+GET http://localhost:8080/api/v1/1

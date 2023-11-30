@@ -55,7 +55,7 @@ public class RestaurantRes {
                 .title(restaurant.getTitle())
                 .link(restaurant.getLink())
                 .address(restaurant.getAddress())
-                .isRetried(restaurant.getIsRetried())
+                .isRetried(restaurant.getIsExposed())
                 .roomId(restaurant.getRoom().getId())
                 .rank(0L)
                 .build();

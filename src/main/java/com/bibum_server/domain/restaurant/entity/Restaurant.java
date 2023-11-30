@@ -28,7 +28,7 @@ public class Restaurant {
     String address;
 
     @Builder.Default
-    Boolean isRetried = false;
+    Boolean isExposed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="room_id")

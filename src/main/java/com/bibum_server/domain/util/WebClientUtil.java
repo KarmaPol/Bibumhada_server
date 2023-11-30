@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 public class WebClientUtil {
-    public static final int MAX_RESTAURANT_NUM = 15;
+    public static final int MAX_RESTAURANT_NUM = 20;
     private final WebClient webClient;
     private String kakaoApiKey;
     private String naverClientId;
