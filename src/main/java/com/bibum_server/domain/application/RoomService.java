@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -27,6 +28,7 @@ public class RoomService {
     private final RestaurantCustomRepository restaurantCustomRepository;
     private final WebClientUtil webClientUtil;
 
+    @Transactional(readOnly = true)
     public RoomRes getRoomInfo(Long roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
         List<RestaurantRes> restaurantList = restaurantCustomRepository.getRestaurantByRoomLimit5(room)
@@ -42,7 +44,6 @@ public class RoomService {
                 .build();
     }
 
-    @Transactional
     public RoomRes createRoom(LocationReq locationReq) {
         Room room = Room.builder()
                 .x(locationReq.getLongitude())
@@ -51,7 +52,7 @@ public class RoomService {
                 .page(1L)
                 .build();
 
-        roomRepository.save(room);
+        Room savedRoom = roomRepository.save(room);
 
         List<KakaoApiRes.RestaurantResponse> restaurantResponses = webClientUtil.getRestaurant(locationReq);
         List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
@@ -67,17 +68,10 @@ public class RoomService {
         room.addRestaurants(restaurants);
 
         restaurantRepository.saveAll(restaurants);
-        List<RestaurantRes> restaurantRes = restaurants.stream().map(RestaurantRes::fromEntity).toList();
-        return RoomRes.builder()
-                .id(room.getId())
-                .x(room.getX())
-                .y(room.getY())
-                .total(room.getTotal())
-                .restaurantResList(restaurantRes)
-                .build();
+
+        return getRoomInfo(savedRoom.getId());
     }
 
-    @Transactional
     public VoteRes voteRestaurant(Long roomId,VoteReq voteReq) {
         List<Long> restaurantReqList = voteReq.getRestaurantIdList();
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
@@ -135,7 +129,6 @@ public class RoomService {
                 .build();
     }
 
-    @Transactional
     public RoomRes retry(Long roomId) {
         restaurantRepository.deleteAllByRoomId(roomId);
         Room room = roomRepository.findById(roomId).orElse(null);
@@ -162,16 +155,9 @@ public class RoomService {
 
         restaurantRepository.saveAll(restaurants);
         List<RestaurantRes> restaurantRes = restaurants.stream().map(RestaurantRes::fromEntity).toList();
-        return RoomRes.builder()
-                .id(room.getId())
-                .x(room.getX())
-                .y(room.getY())
-                .total(0L)
-                .restaurantResList(restaurantRes)
-                .build();
+        return getRoomInfo(roomId);
     }
 
-    @Transactional
     public RoomRes ReSuggestRestaurants(Long roomId) {
         restaurantRepository.deleteAllByRoomId(roomId);
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
@@ -204,7 +190,7 @@ public class RoomService {
                 .restaurantResList(restaurantRes)
                 .build();
     }
-    @Transactional
+
     public RestaurantRes reSuggestOneRestaurant(Long roomId, Long restaurantId) {
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
         ReSuggestReq reSuggestReq = ReSuggestReq.builder()
