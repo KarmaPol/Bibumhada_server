@@ -5,6 +5,7 @@ import com.bibum_server.domain.dto.request.VoteReq;
 import com.bibum_server.domain.dto.response.*;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
+import com.bibum_server.domain.restaurant.repository.RestaurantCustomRepository;
 import com.bibum_server.domain.restaurant.repository.RestaurantRepository;
 import com.bibum_server.domain.room.entity.Room;
 import com.bibum_server.domain.room.repository.RoomRepository;
@@ -23,11 +24,12 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantCustomRepository restaurantCustomRepository;
     private final WebClientUtil webClientUtil;
 
     public RoomRes getRoomInfo(Long roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
-        List<RestaurantRes> restaurantList = restaurantRepository.findAllByRoomId(roomId)
+        List<RestaurantRes> restaurantList = restaurantCustomRepository.getRestaurantByRoomLimit5(room)
                 .stream()
                 .map(RestaurantRes::fromEntity)
                 .toList();
