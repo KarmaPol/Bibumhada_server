@@ -101,9 +101,10 @@ public class RoomService {
     }
 
     public MostPopularRestaurantRes checkBestRestaurant(Long roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
         long total = roomRepository.findById(roomId).get().getTotal();
 
-        List<RestaurantRes> resultList = restaurantRepository.findAllByRoomId(roomId)
+        List<RestaurantRes> resultList = restaurantCustomRepository.getRestaurantByRoomLimit5(room)
                 .stream().map(RestaurantRes::fromEntity).sorted(Comparator.comparing(RestaurantRes::getCount).reversed()).toList();
 
         long rank = 1L;
@@ -120,7 +121,6 @@ public class RoomService {
                 .collect(Collectors.partitioningBy(r -> 1L == r.getRank()));
         List<RestaurantRes> rankOneRestaurants = partitionedResult.get(true);
         List<RestaurantRes> otherRestaurants = partitionedResult.get(false);
-
 
         return MostPopularRestaurantRes.builder()
                 .total(total)
