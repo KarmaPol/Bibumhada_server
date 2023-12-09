@@ -2,10 +2,8 @@ package com.bibum_server.domain;
 
 import com.bibum_server.domain.dto.response.MostPopularRestaurantRes;
 import com.bibum_server.domain.dto.response.RestaurantRes;
-import com.bibum_server.domain.presentation.VoteRestaurantTest;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import com.bibum_server.domain.room.entity.Room;
-import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 import java.util.List;

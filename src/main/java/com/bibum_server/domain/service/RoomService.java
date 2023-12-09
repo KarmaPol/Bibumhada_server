@@ -1,9 +1,10 @@
-package com.bibum_server.domain.application;
+package com.bibum_server.domain.service;
 
-import com.bibum_server.domain.dto.request.ReSuggestReq;
 import com.bibum_server.domain.dto.request.VoteReq;
 import com.bibum_server.domain.dto.response.*;
 import com.bibum_server.domain.dto.request.LocationReq;
+import com.bibum_server.domain.exception.RestaurantNotFoundException;
+import com.bibum_server.domain.exception.RoomNotFoundException;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import com.bibum_server.domain.restaurant.repository.RestaurantCustomRepository;
 import com.bibum_server.domain.restaurant.repository.RestaurantRepository;
@@ -30,7 +31,7 @@ public class RoomService {
 
     @Transactional(readOnly = true)
     public RoomRes getRoomInfo(Long roomId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
         List<RestaurantRes> restaurantList = restaurantCustomRepository.getRestaurantByRoomLimit5(room)
                 .stream()
                 .map(RestaurantRes::fromEntity)
@@ -74,7 +75,7 @@ public class RoomService {
 
     public VoteRes voteRestaurant(Long roomId,VoteReq voteReq) {
         List<Long> restaurantReqList = voteReq.getRestaurantIdList();
-        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
         List<Restaurant> restaurantList = restaurantRepository.findByRoomIdAndIdIn(roomId, restaurantReqList);
 
         restaurantList.forEach(Restaurant::incrementCount);
@@ -101,7 +102,7 @@ public class RoomService {
     }
 
     public MostPopularRestaurantRes checkBestRestaurant(Long roomId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
         long total = roomRepository.findById(roomId).get().getTotal();
 
         List<RestaurantRes> resultList = restaurantCustomRepository.getRestaurantByRoomLimit5(room)
@@ -158,7 +159,7 @@ public class RoomService {
     }
 
     public RoomRes ReSuggestRestaurants(Long roomId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
 
         room.isResuggestAllAvailable();
 
@@ -169,19 +170,19 @@ public class RoomService {
     }
 
     public RoomRes reSuggestOneRestaurant(Long roomId, Long restaurantId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
+        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
 
         room.isResuggestOneAvailable();
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(RestaurantNotFoundException::new);
         restaurant.changeRoomIsExposedFalse();
 
         return getRoomInfo(room.getId());
     }
 
     public NaverApiItemRes convertUrl(Long restaurantId) throws UnsupportedEncodingException {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(RuntimeException::new);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(RestaurantNotFoundException::new);
         return webClientUtil.convertRestaurantUrl(restaurant.getTitle());
     }
 }

@@ -1,8 +1,8 @@
-package com.bibum_server.domain.presentation;
+package com.bibum_server.domain.controller;
 
 import com.bibum_server.domain.AbstractRestDocsTests;
 import com.bibum_server.domain.TestUtil;
-import com.bibum_server.domain.application.RoomService;
+import com.bibum_server.domain.service.RoomService;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.dto.response.RestaurantRes;
 import com.bibum_server.domain.dto.response.RoomRes;

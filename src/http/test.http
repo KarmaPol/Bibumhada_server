@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### 방 정보 조회
-GET http://localhost:8080/api/v1/1
+GET http://localhost:8080/api/v1/100
 
 ### 방 Resuggest
 POST http://localhost:8080/api/v1/resuggest/1
