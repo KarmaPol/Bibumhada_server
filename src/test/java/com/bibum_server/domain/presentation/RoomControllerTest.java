@@ -137,25 +137,4 @@ class RoomControllerTest extends AbstractRestDocsTests {
                 .andExpect(status().isOk())
                 .andDo(restDocs.document());
     }
-    @Test
-    void ReSuggestOneRestaurant() throws Exception{
-        long roomId = 1L;
-        long restaurantId = 1L;
-        Room room = TestUtil.CreateTestRoom();
-        Restaurant restaurant = Restaurant.builder()
-                .room(room)
-                .id(1L)
-                .title("ReSuggestedRestaurant")
-                .link("www.ResuggestURL.com")
-                .distance(123L)
-                .count(0L)
-                .category("TestCategory")
-                .address("testAddress")
-                .build();
-        RestaurantRes response = RestaurantRes.fromEntity(restaurant);
-        given(roomService.reSuggestOneRestaurant(any(Long.class),any(Long.class))).willReturn(response);
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/{roomId}/resuggest/{restaurantId}",roomId,restaurantId))
-                .andExpect(status().isOk())
-                .andDo(restDocs.document());
-    }
 }

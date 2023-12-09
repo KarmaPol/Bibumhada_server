@@ -1,4 +1,4 @@
-GET https://dapi.kakao.com/v2/local/search/keyword.json?query=삼성&page=1
+GET https://dapi.kakao.com/v2/local/search/keyword.json?query=삼성&page=20
 Authorization: KakaoAK 8d70680194cad5df035d3b0c209b3e55
 
 

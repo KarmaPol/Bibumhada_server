@@ -21,7 +21,7 @@ public class RestaurantCustomRepositoryImpl implements RestaurantCustomRepositor
 
         return jpaQueryFactory
                 .selectFrom(restaurant)
-                .where(restaurant.isExposed.eq(false))
+                .where(restaurant.isExposed.eq(true))
                 .limit(5)
                 .fetch();
     }

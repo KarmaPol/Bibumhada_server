@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,13 +49,20 @@ public class TodayMenuController {
     public RoomRes ReSuggestRestaurants(@PathVariable("roomId") Long roomId) {
         return roomService.ReSuggestRestaurants(roomId);
     }
+
     @PostMapping("/api/v1/{roomId}/resuggest/{restaurantId}")
-    public RestaurantRes ReSuggestOneRestaurant(@PathVariable("roomId")Long roomId, @PathVariable("restaurantId") Long restaurantId){
+    public RoomRes ReSuggestOneRestaurant(@PathVariable("roomId")Long roomId, @PathVariable("restaurantId") Long restaurantId){
         return roomService.reSuggestOneRestaurant(roomId, restaurantId);
     }
 
     @GetMapping("/api/v1/info/{restaurantId}")
     public NaverApiItemRes convertKakaoUrl(@PathVariable("restaurantId") long restaurantId) throws UnsupportedEncodingException {
         return roomService.convertUrl(restaurantId);
+    }
+
+    private Long decodeUrl(String roomId) {
+        byte[] decodedBytes = Base64.getDecoder().decode(roomId);
+        String id = new String(decodedBytes);
+        return Long.parseLong(id);
     }
 }

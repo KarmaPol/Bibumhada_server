@@ -134,7 +134,7 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElse(null);
 
         room.updateTotal(0L);
-        roomRepository.save(room);
+        room.deleteAllRestaurants();
         LocationReq locationReq = LocationReq.builder()
                 .longitude(room.getX())
                 .latitude(room.getY())
@@ -154,70 +154,30 @@ public class RoomService {
         room.addRestaurants(restaurants);
 
         restaurantRepository.saveAll(restaurants);
-        List<RestaurantRes> restaurantRes = restaurants.stream().map(RestaurantRes::fromEntity).toList();
         return getRoomInfo(roomId);
     }
 
     public RoomRes ReSuggestRestaurants(Long roomId) {
-        restaurantRepository.deleteAllByRoomId(roomId);
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
-        ReSuggestReq reSuggestReq = ReSuggestReq.builder()
-                .latitude(room.getY())
-                .longitude(room.getX())
-                .page(room.getPage() + 1L)
-                .build();
-        room.getNextPage();
-        roomRepository.save(room);
-        List<KakaoApiRes.RestaurantResponse> restaurantResponses = webClientUtil.reSuggestRestaurant(reSuggestReq);
-        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
-                .title(restaurantResponse.getPlace_name())
-                .category(restaurantResponse.getCategory_name().substring(6).trim())
-                .link(restaurantResponse.getPlace_url())
-                .count(0L)
-                .address(restaurantResponse.getAddress_name())
-                .distance(Long.valueOf(restaurantResponse.getDistance()))
-                .room(room)
-                .build()).collect(Collectors.toList());
 
-        room.addRestaurants(restaurants);
-        restaurantRepository.saveAll(restaurants);
-        List<RestaurantRes> restaurantRes = restaurants.stream().map(RestaurantRes::fromEntity).toList();
-        return RoomRes.builder()
-                .id(room.getId())
-                .x(room.getX())
-                .y(room.getY())
-                .total(room.getTotal())
-                .restaurantResList(restaurantRes)
-                .build();
+        room.isResuggestAllAvailable();
+
+        List<Restaurant> restaurantsByRoom = restaurantCustomRepository.getRestaurantByRoomLimit5(room);
+        restaurantsByRoom.forEach(Restaurant::changeRoomIsExposedFalse);
+
+        return getRoomInfo(room.getId());
     }
 
-    public RestaurantRes reSuggestOneRestaurant(Long roomId, Long restaurantId) {
+    public RoomRes reSuggestOneRestaurant(Long roomId, Long restaurantId) {
         Room room = roomRepository.findById(roomId).orElseThrow(NoSuchElementException::new);
-        ReSuggestReq reSuggestReq = ReSuggestReq.builder()
-                .latitude(room.getY())
-                .longitude(room.getX())
-                .page(room.getPage())
-                .build();
-        Restaurant deleteRestaurant = restaurantRepository.findByRoomIdAndId(roomId, restaurantId);
-        restaurantRepository.delete(deleteRestaurant);
-        List<KakaoApiRes.RestaurantResponse> receivedRestaurantResponse = webClientUtil.reSuggestOneRestaurant(reSuggestReq);
 
-        Restaurant restaurant = receivedRestaurantResponse.stream()
-                .map(restaurantResponse -> Restaurant.builder()
-                        .title(restaurantResponse.getPlace_name())
-                        .category(restaurantResponse.getCategory_name().substring(6).trim())
-                        .link(restaurantResponse.getPlace_url())
-                        .count(0L)
-                        .address(restaurantResponse.getAddress_name())
-                        .distance(Long.valueOf(restaurantResponse.getDistance()))
-                        .room(room)
-                        .build())
-                .findFirst()
+        room.isResuggestOneAvailable();
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(NoSuchElementException::new);
+        restaurant.changeRoomIsExposedFalse();
 
-        room.addRestaurant(restaurant);
-        restaurantRepository.save(restaurant);
-        return RestaurantRes.fromEntity(restaurant);
+        return getRoomInfo(room.getId());
     }
 
     public NaverApiItemRes convertUrl(Long restaurantId) throws UnsupportedEncodingException {

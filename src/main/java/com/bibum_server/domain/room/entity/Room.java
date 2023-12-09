@@ -36,6 +36,10 @@ public class Room {
         restaurants.stream().map(restaurant -> restaurantList.add(restaurant)).collect(Collectors.toList());
     }
 
+    public void deleteAllRestaurants(){
+        this.restaurantList.clear();
+    }
+
     public void addRestaurant(Restaurant restaurant) {
         restaurantList.add(restaurant);
     }
@@ -56,6 +60,18 @@ public class Room {
     }
     public void getNextPage(){
         this.page+=1;
+    }
+
+    public int getExposedRoomNumber(){
+        return (int) this.restaurantList.stream().filter(Restaurant::getIsExposed).count();
+    }
+
+    public void isResuggestAllAvailable(){
+        if(getExposedRoomNumber() < 10) throw new RuntimeException("재추천할 수 없습니다");
+    }
+
+    public void isResuggestOneAvailable(){
+        if(getExposedRoomNumber() < 1) throw new RuntimeException("재추천할 수 없습니다");
     }
 }
 

@@ -3,10 +3,10 @@ package com.bibum_server.domain.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Base64;
 import java.util.List;
 
 @Getter
-
 public class RoomRes {
     Long id;
     String x;

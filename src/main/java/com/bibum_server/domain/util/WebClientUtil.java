@@ -1,7 +1,6 @@
 package com.bibum_server.domain.util;
 
 import com.bibum_server.domain.dto.request.LocationReq;
-import com.bibum_server.domain.dto.request.ReSuggestReq;
 import com.bibum_server.domain.dto.response.KakaoApiRes;
 import com.bibum_server.domain.dto.response.NaverApiItemRes;
 import com.bibum_server.domain.dto.response.NaverApiResponse;
@@ -18,21 +17,10 @@ import java.util.List;
 
 @Component
 public class WebClientUtil {
-    public static final int MAX_RESTAURANT_NUM = 20;
-    private final WebClient webClient;
+    public static final int MAX_RESTAURANT_NUM = 15;
     private String kakaoApiKey;
     private String naverClientId;
     private String naverClientSecret;
-
-    public WebClientUtil(@Value("${KAKAO.REST_API_KEY}") String kakaoApiKey,
-                         @Value("${NAVER.CLIENT_ID}") String naverClientId,
-                         @Value("${NAVER.CLIENT_SECRET}") String naverClientSecret) {
-        this.webClient = WebClient.builder()
-                .defaultHeader("Authorization", "KakaoAK " + kakaoApiKey)
-                .defaultHeader("X-Naver-Client-Id", naverClientId)
-                .defaultHeader("X-Naver-Client-Secret", naverClientSecret)
-                .build();
-    }
 
     @Value("${KAKAO.REST_API_KEY}")
     public void setKakaoApiKey(String kakaoApiKey) {
@@ -50,78 +38,31 @@ public class WebClientUtil {
     }
 
     public List<KakaoApiRes.RestaurantResponse> getRestaurant(LocationReq locationReq) {
-        List<KakaoApiRes.RestaurantResponse> restaurants = webClient.get()
+
+        var webClient = WebClient.builder()
+                .baseUrl("https://dapi.kakao.com")
+                .defaultHeader("Authorization", "KakaoAK " + kakaoApiKey)
+                .build();
+
+        Mono<KakaoApiRes> kakaoApiResMono = webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .scheme("https")
-                        .host("dapi.kakao.com")
                         .path("/v2/local/search/keyword.json")
                         .queryParam("x", locationReq.getLongitude())
                         .queryParam("y", locationReq.getLatitude())
                         .queryParam("query", "음식점")
                         .queryParam("radius", 500)
-                        .queryParam("page", 1)
                         .queryParam("size", MAX_RESTAURANT_NUM)
                         .build())
-                .header("Authorization", "KakaoAK " + kakaoApiKey)
                 .retrieve()
-                .bodyToMono(KakaoApiRes.class)
-                .block()
-                .getDocuments();
+                .bodyToMono(KakaoApiRes.class);
+
+        KakaoApiRes kakaoApiRes = kakaoApiResMono.block();
+        List<KakaoApiRes.RestaurantResponse> restaurants = kakaoApiRes.getDocuments();
+
         Collections.shuffle(restaurants);
 
         return restaurants;
     }
-
-    public List<KakaoApiRes.RestaurantResponse> reSuggestRestaurant(ReSuggestReq reSuggestReq) {
-        if(reSuggestReq.getPage().equals(3L)){
-            reSuggestReq.setPage(1L);
-        }
-
-        List<KakaoApiRes.RestaurantResponse> restaurants = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .scheme("https")
-                        .host("dapi.kakao.com")
-                        .path("/v2/local/search/keyword.json")
-                        .queryParam("x", reSuggestReq.getLongitude())
-                        .queryParam("y", reSuggestReq.getLatitude())
-                        .queryParam("query", "음식점")
-                        .queryParam("radius", 500)
-                        .queryParam("page", reSuggestReq.getPage())
-                        .queryParam("size", MAX_RESTAURANT_NUM)
-                        .build())
-                .header("Authorization", "KakaoAK " + kakaoApiKey)
-                .retrieve()
-                .bodyToMono(KakaoApiRes.class)
-                .block()
-                .getDocuments();
-        Collections.shuffle(restaurants);
-
-        return restaurants.subList(0, 5);
-    }
-
-    public List<KakaoApiRes.RestaurantResponse> reSuggestOneRestaurant(ReSuggestReq reSuggestReq){
-        List<KakaoApiRes.RestaurantResponse> restaurants = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .scheme("https")
-                        .host("dapi.kakao.com")
-                        .path("/v2/local/search/keyword.json")
-                        .queryParam("x", reSuggestReq.getLongitude())
-                        .queryParam("y", reSuggestReq.getLatitude())
-                        .queryParam("query", "음식점")
-                        .queryParam("radius", 500)
-                        .queryParam("page", reSuggestReq.getPage())
-                        .queryParam("size", MAX_RESTAURANT_NUM)
-                        .build())
-                .header("Authorization", "KakaoAK " + kakaoApiKey)
-                .retrieve()
-                .bodyToMono(KakaoApiRes.class)
-                .block()
-                .getDocuments();
-        Collections.shuffle(restaurants);
-
-        return restaurants.subList(0, 1);
-    }
-
 
     public NaverApiItemRes convertRestaurantUrl(String title) throws UnsupportedEncodingException {
         WebClient webClient = WebClient.builder()
@@ -143,6 +84,4 @@ public class WebClientUtil {
         NaverApiItemRes firstItem = response.getItems().get(0);  // 첫 번째 아이템 가져오기.
         return firstItem;
     }
-
-
 }

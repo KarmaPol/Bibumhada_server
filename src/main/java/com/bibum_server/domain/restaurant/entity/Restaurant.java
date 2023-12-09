@@ -28,7 +28,7 @@ public class Restaurant {
     String address;
 
     @Builder.Default
-    Boolean isExposed = false;
+    Boolean isExposed = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="room_id")
@@ -38,4 +38,7 @@ public class Restaurant {
         this.count+=1;
     }
 
+    public void changeRoomIsExposedFalse() {
+        isExposed = false;
+    }
 }
