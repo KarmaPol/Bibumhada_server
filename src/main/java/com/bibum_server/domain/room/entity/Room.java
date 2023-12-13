@@ -1,5 +1,6 @@
 package com.bibum_server.domain.room.entity;
 
+import com.bibum_server.domain.exception.ResuggestUnavailableException;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -67,11 +68,11 @@ public class Room {
     }
 
     public void isResuggestAllAvailable(){
-        if(getExposedRoomNumber() < 10) throw new RuntimeException("재추천할 수 없습니다");
+        if(getExposedRoomNumber() < 10) throw new ResuggestUnavailableException();
     }
 
     public void isResuggestOneAvailable(){
-        if(getExposedRoomNumber() < 1) throw new RuntimeException("재추천할 수 없습니다");
+        if(getExposedRoomNumber() < 6) throw new ResuggestUnavailableException();
     }
 }
 
