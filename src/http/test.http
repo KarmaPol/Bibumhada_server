@@ -10,20 +10,20 @@ Content-Type: application/json
 }
 
 ### 방 정보 조회
-GET http://localhost:8080/api/v1/100
+GET http://localhost:8080/api/v1/1
 
 ### 방 Resuggest
 POST http://localhost:8080/api/v1/resuggest/1
 
 ### 음식점 Resuggest
-POST http://localhost:8080/api/v1/1/resuggest/9
+POST http://localhost:8080/api/v1/1/resuggest/11
 
 ### 음식점 투표
 POST http://localhost:8080/api/v1/1/vote
 Content-Type: application/json
 
 {
-  "restaurantIdList" : [12, 13]
+  "restaurantIdList" : [14]
 }
 
 ### 최고 음식점 선정
