@@ -45,7 +45,7 @@ jobs:
         password: ${{secrets.DOCKERHUB_TOKEN}}
         
     - name: Build the Docker image
-      run: docker build -t ${{secrets.DOCKERHUB_REPOSITORY}}/bibum-server:lastest .
+      run: docker build -t ${{secrets.DOCKERHUB_REPOSITORY}}/bibum-server:latest .
       
     - name: Docker Push
-      run: docker push ${{secrets.DOCKERHUB_REPOSITORY}}/bibum-server:lastest
+      run: docker push ${{secrets.DOCKERHUB_REPOSITORY}}/bibum-server:latest
