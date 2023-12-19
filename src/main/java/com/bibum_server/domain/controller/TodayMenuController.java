@@ -22,7 +22,12 @@ public class TodayMenuController {
 
     private final RoomService roomService;
 
-    @Operation(summary = "방 생성", description = "방을 생성합니다.")
+    @Operation(summary = "방 생성", description = """
+             방을 생성합니다.
+             데이터 예시)
+             "longitude" : "127.06283102249932",
+             "latitude" : "37.514322572335935"
+             """)
     @PostMapping("/api/v1/create")
     public RoomRes CreateRoom(@RequestBody LocationReq locationReq) {
         return roomService.createRoom(locationReq);
