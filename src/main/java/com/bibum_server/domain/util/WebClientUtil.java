@@ -47,9 +47,10 @@ public class WebClientUtil {
         Mono<KakaoApiRes> kakaoApiResMono = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v2/local/search/keyword.json")
+                        .queryParam("query", "음식점")
+                        .queryParam("category_group_code", "FD6")
                         .queryParam("x", locationReq.getLongitude())
                         .queryParam("y", locationReq.getLatitude())
-                        .queryParam("query", "음식점")
                         .queryParam("radius", 500)
                         .queryParam("size", MAX_RESTAURANT_NUM)
                         .build())
