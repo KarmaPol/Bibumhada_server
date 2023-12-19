@@ -17,8 +17,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://43.201.167.198:8080",
                         "http://43.201.167.198",
                         "https://todays-menu-front.vercel.app",
-                        "https://dev-todays-menu-front.vercel.app"
-
+                        "https://dev-todays-menu-front.vercel.app",
+                        "https://bibum.karmapol.link",
+                        "http://bibum.karmapol.link"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
         ;
