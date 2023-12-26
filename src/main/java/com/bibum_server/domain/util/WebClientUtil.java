@@ -12,12 +12,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Component
 public class WebClientUtil {
     public static final int MAX_RESTAURANT_NUM = 15;
+    public static final int MAX_RESTAURANT_PAGE = 2;
     private String kakaoApiKey;
     private String naverClientId;
     private String naverClientSecret;
@@ -44,7 +49,22 @@ public class WebClientUtil {
                 .defaultHeader("Authorization", "KakaoAK " + kakaoApiKey)
                 .build();
 
-        Mono<KakaoApiRes> kakaoApiResMono = webClient.get()
+        List<KakaoApiRes.RestaurantResponse> restaurants = new ArrayList<>();
+
+        IntStream.range(1, MAX_RESTAURANT_PAGE + 1)
+                .forEach(i -> {
+                    Mono<KakaoApiRes> kakaoApiResMono = getKakaoApiResMono(locationReq, webClient, i);
+                    List<KakaoApiRes.RestaurantResponse> restaurantResponses = kakaoApiResMono.block().getDocuments();
+                    restaurants.addAll(restaurantResponses);
+                });
+
+        Collections.shuffle(restaurants);
+
+        return restaurants;
+    }
+
+    private Mono<KakaoApiRes> getKakaoApiResMono(LocationReq locationReq, WebClient webClient, int page) {
+        return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v2/local/search/keyword.json")
                         .queryParam("query", "음식점")
@@ -53,16 +73,10 @@ public class WebClientUtil {
                         .queryParam("y", locationReq.getLatitude())
                         .queryParam("radius", 500)
                         .queryParam("size", MAX_RESTAURANT_NUM)
+                        .queryParam("page", page)
                         .build())
                 .retrieve()
                 .bodyToMono(KakaoApiRes.class);
-
-        KakaoApiRes kakaoApiRes = kakaoApiResMono.block();
-        List<KakaoApiRes.RestaurantResponse> restaurants = kakaoApiRes.getDocuments();
-
-        Collections.shuffle(restaurants);
-
-        return restaurants;
     }
 
     public NaverApiItemRes convertRestaurantUrl(String title) throws UnsupportedEncodingException {
