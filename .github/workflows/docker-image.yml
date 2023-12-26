@@ -24,9 +24,11 @@ jobs:
     - name: Create application-properties.yml
       run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-properties.yml
     - name: Create application-database.yml
-      run: echo "${{ secrets.APPLICATION_DATABASE }}" > src/main/resources/database/application-database.yml
+      run: echo "${{ secrets.APPLICATION_DATABASE }}" > src/main/resources/application-database.yml
     - name: Create application-apikey.yml
-      run: echo "${{ secrets.APPLICATION_APIKEY }}" > src/main/resources/api/application-apikey.yml
+      run: echo "${{ secrets.APPLICATION_APIKEY }}" > src/main/resources/application-apikey.yml
+    - name: Create application.yml
+      run: echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
     
     - name: Set up JDK 17
       uses: actions/setup-java@v3
