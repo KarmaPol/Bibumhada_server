@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
-@PropertySource(value = {"classpath:database/application-database.yml"}, factory = YamlPropertySourceFactory.class)
-@PropertySource(value = {"classpath:api/application-apikey.yml"}, factory = YamlPropertySourceFactory.class)
+@PropertySource(value = {"classpath:application-database.yml"}, factory = YamlPropertySourceFactory.class)
+@PropertySource(value = {"classpath:application-apikey.yml"}, factory = YamlPropertySourceFactory.class)
 public class BibumServerApplication {
 
 	public static void main(String[] args) {
