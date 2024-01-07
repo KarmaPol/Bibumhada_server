@@ -19,7 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://todays-menu-front.vercel.app",
                         "https://dev-todays-menu-front.vercel.app",
                         "https://bibum.karmapol.link",
-                        "http://bibum.karmapol.link"
+                        "http://bibum.karmapol.link",
+                        "https://todays-menu-front-three.vercel.app/"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
         ;
