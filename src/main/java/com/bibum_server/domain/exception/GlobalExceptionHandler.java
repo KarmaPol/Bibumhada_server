@@ -21,8 +21,6 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleCustomException(CustomException e){
         log.info("Error occurred, {}", e);
 
-        Sentry.captureException(e);
-
         return new ErrorResponse(e.getCode(), e.getMessage());
     }
 
@@ -32,8 +30,6 @@ public class GlobalExceptionHandler {
         log.info("Method argument not valid!!, {}", e);
 
         ErrorResponse errorResponse = new ErrorResponse("400", "잘못된 요청입니다.");
-
-        Sentry.captureException(e);
 
         e.getFieldErrors().forEach(error -> {
             errorResponse.addValidation(error.getField(), error.getDefaultMessage());
