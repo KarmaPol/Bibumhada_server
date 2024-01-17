@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @Component
 public class WebClientUtil {
     public static final int MAX_RESTAURANT_NUM = 15;
-    public static final int MAX_RESTAURANT_PAGE = 2;
+    public static final int MAX_RESTAURANT_PAGE = 1;
     private String kakaoApiKey;
     private String naverClientId;
     private String naverClientSecret;
@@ -42,28 +42,25 @@ public class WebClientUtil {
         this.naverClientSecret = naverClientSecret;
     }
 
-    public List<KakaoApiRes.RestaurantResponse> getRestaurant(LocationReq locationReq) {
+    public KakaoApiRes getRestaurant(LocationReq locationReq, Long page) {
 
         var webClient = WebClient.builder()
                 .baseUrl("https://dapi.kakao.com")
                 .defaultHeader("Authorization", "KakaoAK " + kakaoApiKey)
                 .build();
 
-        List<KakaoApiRes.RestaurantResponse> restaurants = new ArrayList<>();
+        Mono<KakaoApiRes> kakaoApiResMono = getKakaoApiResMono(locationReq, webClient, page);
 
-        IntStream.range(1, MAX_RESTAURANT_PAGE + 1)
-                .forEach(i -> {
-                    Mono<KakaoApiRes> kakaoApiResMono = getKakaoApiResMono(locationReq, webClient, i);
-                    List<KakaoApiRes.RestaurantResponse> restaurantResponses = kakaoApiResMono.block().getDocuments();
-                    restaurants.addAll(restaurantResponses);
-                });
+        KakaoApiRes kakaoApiRes = kakaoApiResMono.block();
+        KakaoApiRes.MetaResponse metaData = kakaoApiRes.getMeta();
+        List<KakaoApiRes.RestaurantResponse> restaurantResponses = kakaoApiRes.getDocuments();
 
-        Collections.shuffle(restaurants);
+        Collections.shuffle(kakaoApiRes.getDocuments());
 
-        return restaurants;
+        return kakaoApiRes;
     }
 
-    private Mono<KakaoApiRes> getKakaoApiResMono(LocationReq locationReq, WebClient webClient, int page) {
+    private Mono<KakaoApiRes> getKakaoApiResMono(LocationReq locationReq, WebClient webClient, Long page) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v2/local/search/keyword.json")
@@ -74,6 +71,7 @@ public class WebClientUtil {
                         .queryParam("radius", 500)
                         .queryParam("size", MAX_RESTAURANT_NUM)
                         .queryParam("page", page)
+                        .queryParam("sort", "distance")
                         .build())
                 .retrieve()
                 .bodyToMono(KakaoApiRes.class);

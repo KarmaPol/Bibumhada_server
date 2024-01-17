@@ -29,6 +29,8 @@ public class Room {
 
     private Long page;
 
+    private Boolean isEnd = false;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private List<Restaurant> restaurantList = new ArrayList<>();
@@ -59,20 +61,24 @@ public class Room {
     public void updateTotal(Long value){
         this.total = value;
     }
-    public void getNextPage(){
+    public void setNextPage(){
         this.page+=1;
+    }
+
+    public void setIsEndTrue(){
+        this.isEnd = true;
     }
 
     public int getExposedRoomNumber(){
         return (int) this.restaurantList.stream().filter(Restaurant::getIsExposed).count();
     }
 
-    public void isResuggestAllAvailable(){
-        if(getExposedRoomNumber() < 10) throw new ResuggestUnavailableException();
+    public boolean isResuggestAllAvailable(){
+        return getExposedRoomNumber() < 10;
     }
 
-    public void isResuggestOneAvailable(){
-        if(getExposedRoomNumber() < 6) throw new ResuggestUnavailableException();
+    public boolean isResuggestOneAvailable(){
+        return getExposedRoomNumber() < 6;
     }
 }
 

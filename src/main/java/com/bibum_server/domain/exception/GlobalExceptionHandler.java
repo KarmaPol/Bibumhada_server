@@ -1,5 +1,6 @@
 package com.bibum_server.domain.exception;
 
+import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,6 +21,8 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleCustomException(CustomException e){
         log.info("Error occurred, {}", e);
 
+        Sentry.captureException(e);
+
         return new ErrorResponse(e.getCode(), e.getMessage());
     }
 
@@ -29,6 +32,8 @@ public class GlobalExceptionHandler {
         log.info("Method argument not valid!!, {}", e);
 
         ErrorResponse errorResponse = new ErrorResponse("400", "잘못된 요청입니다.");
+
+        Sentry.captureException(e);
 
         e.getFieldErrors().forEach(error -> {
             errorResponse.addValidation(error.getField(), error.getDefaultMessage());
@@ -41,6 +46,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception e){
         log.error("Unexpected Error!!, {}", e);
+
+        Sentry.captureException(e);
 
         return new ErrorResponse("500", "서버 오류가 발생했습니다.");
     }

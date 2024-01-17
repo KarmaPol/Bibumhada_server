@@ -2,14 +2,17 @@ package com.bibum_server.domain.dto.response;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class KakaoApiRes {
     public List<RestaurantResponse> getDocuments() {
         return documents;
     }
 
-    private List<RestaurantResponse> documents;
+    private MetaResponse meta;
+    private List<RestaurantResponse> documents = new ArrayList<>();
     @Getter
     public static class RestaurantResponse {
         String address_name;
@@ -24,5 +27,10 @@ public class KakaoApiRes {
         String road_address_name;
         String x;
         String y;
+    }
+
+    @Getter
+    public static class MetaResponse {
+        Boolean is_end;
     }
 }

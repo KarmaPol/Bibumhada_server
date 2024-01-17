@@ -51,12 +51,6 @@ public class TodayMenuController {
         return roomService.checkBestRestaurant(roomId);
     }
 
-    @Operation(summary = "방 재생성", description = "방을 재생성합니다.")
-    @PostMapping("/api/v1/retry/{roomId}")
-    public RoomRes ReCreateRoom(@PathVariable("roomId") Long roomId) {
-        return roomService.retry(roomId);
-    }
-
     @Operation(summary = "메뉴 전체 재추천", description = "특정 방의 메뉴 전체(5개)를 재생성합니다.")
     @PostMapping("/api/v1/resuggest/{roomId}")
     public RoomRes ReSuggestRestaurants(@PathVariable("roomId") Long roomId) {
