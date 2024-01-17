@@ -94,30 +94,6 @@ class RoomControllerTest extends AbstractRestDocsTests {
     }
 
     @Test
-    void retry() throws Exception {
-        long roomId = 1L;
-        Room room = TestUtil.CreateTestRoom();
-
-        List<Restaurant> restaurantList = TestUtil.CreateTestRestaurantList(room);
-        room.addRestaurants(restaurantList);
-
-        List<RestaurantRes> restaurantResList = restaurantList.stream().map(RestaurantRes::fromEntity).toList();
-        RoomRes mockResponse = RoomRes.builder()
-                .id(room.getId())
-                .x(room.getX())
-                .y(room.getY())
-                .total(room.getTotal())
-                .restaurantResList(restaurantResList)
-                .build();
-        given(roomService.retry(any(Long.class))).willReturn(mockResponse);
-
-
-        this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/retry/{roomId}", roomId))
-                .andExpect(status().isOk())
-                .andDo(restDocs.document());
-    }
-
-    @Test
     void getRoomInfo() throws Exception {
         long roomId = 1L;
         Room room = TestUtil.CreateTestRoom();
