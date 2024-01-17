@@ -4,6 +4,7 @@ import com.bibum_server.domain.dto.request.VoteReq;
 import com.bibum_server.domain.dto.response.*;
 import com.bibum_server.domain.dto.request.LocationReq;
 import com.bibum_server.domain.exception.RestaurantNotFoundException;
+import com.bibum_server.domain.exception.ResuggestUnavailableException;
 import com.bibum_server.domain.exception.RoomNotFoundException;
 import com.bibum_server.domain.restaurant.entity.Restaurant;
 import com.bibum_server.domain.restaurant.repository.RestaurantCustomRepository;
@@ -55,20 +56,7 @@ public class RoomService {
 
         Room savedRoom = roomRepository.save(room);
 
-        List<KakaoApiRes.RestaurantResponse> restaurantResponses = webClientUtil.getRestaurant(locationReq);
-        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
-                .title(restaurantResponse.getPlace_name())
-                .category(restaurantResponse.getCategory_name().substring(6).trim())
-                .link(restaurantResponse.getPlace_url())
-                .count(0L)
-                .address(restaurantResponse.getAddress_name())
-                .distance(Long.valueOf(restaurantResponse.getDistance().equals("") ? "0": restaurantResponse.getDistance()))
-                .room(room)
-                .build()).collect(Collectors.toList());
-
-        room.addRestaurants(restaurants);
-
-        restaurantRepository.saveAll(restaurants);
+        addRoomRestaurant(room);
 
         return getRoomInfo(savedRoom.getId());
     }
@@ -130,38 +118,15 @@ public class RoomService {
                 .build();
     }
 
-    public RoomRes retry(Long roomId) {
-        restaurantRepository.deleteAllByRoomId(roomId);
-        Room room = roomRepository.findById(roomId).orElse(null);
-
-        room.updateTotal(0L);
-        room.deleteAllRestaurants();
-        LocationReq locationReq = LocationReq.builder()
-                .longitude(room.getX())
-                .latitude(room.getY())
-                .build();
-
-        List<KakaoApiRes.RestaurantResponse> restaurantResponses = webClientUtil.getRestaurant(locationReq);
-        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
-                .title(restaurantResponse.getPlace_name())
-                .category(restaurantResponse.getCategory_name().substring(6).trim())
-                .link(restaurantResponse.getPlace_url())
-                .count(0L)
-                .address(restaurantResponse.getAddress_name())
-                .distance(Long.valueOf(restaurantResponse.getDistance()))
-                .room(room)
-                .build()).collect(Collectors.toList());
-
-        room.addRestaurants(restaurants);
-
-        restaurantRepository.saveAll(restaurants);
-        return getRoomInfo(roomId);
-    }
-
     public RoomRes ReSuggestRestaurants(Long roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
 
-        room.isResuggestAllAvailable();
+        if(room.isResuggestAllAvailable()){
+            if(room.getIsEnd()) {
+                throw new ResuggestUnavailableException();
+            }
+            addRoomRestaurant(room);
+        }
 
         List<Restaurant> restaurantsByRoom = restaurantCustomRepository.getRestaurantByRoomLimit5(room);
         restaurantsByRoom.forEach(Restaurant::changeRoomIsExposedFalse);
@@ -172,7 +137,12 @@ public class RoomService {
     public RoomRes reSuggestOneRestaurant(Long roomId, Long restaurantId) {
         Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
 
-        room.isResuggestOneAvailable();
+        if(room.isResuggestOneAvailable()){
+            if(room.getIsEnd()) {
+                throw new ResuggestUnavailableException();
+            }
+            addRoomRestaurant(room);
+        }
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(RestaurantNotFoundException::new);
@@ -184,5 +154,29 @@ public class RoomService {
     public NaverApiItemRes convertUrl(Long restaurantId) throws UnsupportedEncodingException {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(RestaurantNotFoundException::new);
         return webClientUtil.convertRestaurantUrl(restaurant.getTitle());
+    }
+
+    private void addRoomRestaurant(Room room) {
+        KakaoApiRes kakaoApiRes = webClientUtil.getRestaurant(new LocationReq(room.getX(), room.getY()), room.getPage());
+        room.setNextPage();
+
+        if(kakaoApiRes.getMeta().getIs_end()) {
+            room.setIsEndTrue();
+        }
+
+        List<KakaoApiRes.RestaurantResponse> restaurantResponses = kakaoApiRes.getDocuments();
+        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
+                .title(restaurantResponse.getPlace_name())
+                .category(restaurantResponse.getCategory_name().substring(6).trim())
+                .link(restaurantResponse.getPlace_url())
+                .count(0L)
+                .address(restaurantResponse.getAddress_name())
+                .distance(Long.valueOf(restaurantResponse.getDistance().equals("") ? "0": restaurantResponse.getDistance()))
+                .room(room)
+                .build()).collect(Collectors.toList());
+
+        room.addRestaurants(restaurants);
+
+        restaurantRepository.saveAll(restaurants);
     }
 }

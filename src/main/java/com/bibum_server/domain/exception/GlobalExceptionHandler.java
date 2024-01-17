@@ -1,5 +1,6 @@
 package com.bibum_server.domain.exception;
 
+import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -41,6 +42,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception e){
         log.error("Unexpected Error!!, {}", e);
+
+        Sentry.captureException(e);
 
         return new ErrorResponse("500", "서버 오류가 발생했습니다.");
     }
