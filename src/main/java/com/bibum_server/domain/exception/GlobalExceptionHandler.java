@@ -16,12 +16,13 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CustomException.class)
-    public ErrorResponse handleCustomException(CustomException e){
+    public ResponseEntity<?> handleCustomException(CustomException e){
         log.info("Error occurred, {}", e);
 
-        return new ErrorResponse(e.getCode(), e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(e.getCode(), e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(Integer.parseInt(e.getCode())));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
