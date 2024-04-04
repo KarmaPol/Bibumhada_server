@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -165,18 +166,30 @@ public class RoomService {
         }
 
         List<KakaoApiRes.RestaurantResponse> restaurantResponses = kakaoApiRes.getDocuments();
-        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> Restaurant.builder()
+        List<Restaurant> restaurants = restaurantResponses.stream().map(restaurantResponse -> {
+            String category = getCategory(restaurantResponse);
+            return Restaurant.builder()
                 .title(restaurantResponse.getPlace_name())
-                .category(restaurantResponse.getCategory_name().substring(6).trim())
+                .category(category)
                 .link(restaurantResponse.getPlace_url())
                 .count(0L)
                 .address(restaurantResponse.getAddress_name())
                 .distance(Long.valueOf(restaurantResponse.getDistance().equals("") ? "0": restaurantResponse.getDistance()))
                 .room(room)
-                .build()).collect(Collectors.toList());
+                .build();
+        }).collect(Collectors.toList());
 
         room.addRestaurants(restaurants);
 
         restaurantRepository.saveAll(restaurants);
+    }
+
+    private String getCategory(KakaoApiRes.RestaurantResponse restaurantResponse) {
+        String[] categories = restaurantResponse.getCategory_name().split(" > ");
+        if (categories.length >= 2) {
+            return categories[0] + " > " + categories[1];
+        } else {
+            return restaurantResponse.getCategory_name();
+        }
     }
 }
