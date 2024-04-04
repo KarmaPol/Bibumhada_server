@@ -51,3 +51,8 @@ jobs:
       
     - name: Docker Push
       run: docker push ${{secrets.DOCKERHUB_REPOSITORY}}/bibum-server:latest
+
+    - name: Trigger Portainer Webhook
+      run: |
+        PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
+        curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
