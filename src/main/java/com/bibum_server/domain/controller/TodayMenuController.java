@@ -22,6 +22,11 @@ public class TodayMenuController {
 
     private final RoomService roomService;
 
+    @GetMapping("/health-check")
+    public String healthCheck() {
+        return "OK";
+    }
+
     @Operation(summary = "방 생성", description = """
              방을 생성합니다.
              데이터 예시)
